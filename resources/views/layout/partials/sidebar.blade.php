@@ -91,7 +91,7 @@
                                 <li class="submenu-open">
                                         <h6 class="submenu-hdr">Inventory</h6>
                                         <ul>
-                                                <li class="{{ Request::is('product-list','product-details') ? 'active' : '' }}"><a href="{{url('product-list')}}"><i data-feather="box"></i><span>Pupuk</span></a></li>
+                                                <li class="{{ Request::is('product-list','product-details') ? 'active' : '' }}"><a href="{{url('fertilizers')}}"><i data-feather="box"></i><span>Pupuk</span></a></li>
                                                 <li class="{{ Request::is('low-stocks') ? 'active' : '' }}"><a href="{{url('low-stocks')}}"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Stok Pupuk</span></a></li>
                                                 <li class="{{ Request::is('stock-adjustment') ? 'active' : '' }}"><a href="{{url('stock-adjustment')}}"><i class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
                                         </ul>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FertilizerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\FarmerController;
@@ -33,6 +34,11 @@ Route::get('/admin-dashboard', function () {
 })->name('admin-dashboard');
 
 Route::resource('farmers', FarmerController::class);
+
+Route::resource('fertilizers', FertilizerController::class);
+Route::get('/add-fertilizer', function () {
+    return view('fertilizers.add-fertilizer');
+})->name('add-fertilizer');
 
 // =======================================================
 
