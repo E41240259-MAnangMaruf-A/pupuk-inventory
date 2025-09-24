@@ -93,49 +93,63 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <tbody>
-                            @foreach($fertilizers as $fertilizer)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $fertilizer->fertilizer_name }}</td>
-                                                    <td>{{ $fertilizer->unit ?? '-' }}</td>
-                                                    <td>
-                                                        {{ $fertilizer->subsidized_price
-                                ? 'Rp ' . number_format($fertilizer->subsidized_price, 0, ',', '.')
-                                : '-' }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $fertilizer->retail_price
-                                ? 'Rp ' . number_format($fertilizer->retail_price, 0, ',', '.')
-                                : '-' }}
-                                                    </td>
-                                                    <td>{{ $fertilizer->description ?? '-' }}</td>
-                                                    <td>
-                                                        @if($fertilizer->is_active)
-                                                            <span class="badge bg-success">Aktif</span>
-                                                        @else
-                                                            <span class="badge bg-danger">Nonaktif</span>
-                                                        @endif
-                                                    </td>
-                                                    <td class="action-table-data">
-                                                        <div class="edit-delete-action">
-                                                            <a class="me-2 p-2" href="{{ route('fertilizer-types.edit', $fertilizer->id) }}">
-                                                                <i data-feather="edit" class="feather-edit"></i>
-                                                            </a>
-                                                            <form action="{{ route('fertilizer-types.destroy', $fertilizer->id) }}"
-                                                                method="POST" class="d-inline">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="btn btn-link p-2 text-danger"
-                                                                    onclick="return confirm('Yakin ingin menghapus pupuk ini?')">
-                                                                    <i data-feather="trash-2" class="feather-trash-2"></i>
-                                                                </button>
-                                                            </form>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                            @endforeach
-                        </tbody>
+                        <table class="table datanew">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Pupuk</th>
+                                    <th>Satuan</th>
+                                    <th>Harga Subsidi</th>
+                                    <th>Harga Eceran</th>
+                                    <th>Deskripsi</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($fertilizers as $fertilizer)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $fertilizer->fertilizer_name }}</td>
+                                        <td>{{ $fertilizer->unit ?? '-' }}</td>
+                                        <td>
+                                            {{ $fertilizer->subsidized_price
+                                            ? 'Rp ' . number_format($fertilizer->subsidized_price, 0, ',', '.')
+                                            : '-' }}
+                                        </td>
+                                        <td>
+                                            {{ $fertilizer->retail_price
+                                            ? 'Rp ' . number_format($fertilizer->retail_price, 0, ',', '.')
+                                            : '-' }}
+                                        </td>
+                                        <td>{{ $fertilizer->description ?? '-' }}</td>
+                                        <td>
+                                            @if($fertilizer->is_active)
+                                                <span class="badge bg-success">Aktif</span>
+                                            @else
+                                                <span class="badge bg-danger">Nonaktif</span>
+                                            @endif
+                                        </td>
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                <a class="me-2 p-2" href="{{ route('fertilizer-types.edit', $fertilizer->id) }}">
+                                                    <i data-feather="edit" class="feather-edit"></i>
+                                                </a>
+                                                <form action="{{ route('fertilizer-types.destroy', $fertilizer->id) }}"
+                                                    method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-link p-2 text-danger"
+                                                        onclick="return confirm('Yakin ingin menghapus pupuk ini?')">
+                                                        <i data-feather="trash-2" class="feather-trash-2"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
