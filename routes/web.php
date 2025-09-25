@@ -4,7 +4,7 @@ use App\Http\Controllers\FertilizerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\FarmerController;
-
+use App\Http\Controllers\FarmerSubmissionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,6 +46,15 @@ Route::get('/stok-pupuk', [FertilizerController::class, 'stock'])
 
 Route::post('/simpan-stok-pupuk', [FertilizerController::class, 'updateStockIn'])
     ->name('fertilizers.stock.store');
+    
+// Routes untuk Data Petani (Admin)
+Route::resource('farmers', FarmerController::class);
+Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->name('farmers.submissions');
+
+// Routes untuk Data Petani Desa (Pengajuan)
+Route::resource('farmer-submissions', FarmerSubmissionController::class);
+Route::post('/farmer-submissions/{farmerSubmission}/validate', [FarmerSubmissionController::class, 'validate'])
+     ->name('farmer-submissions.validate');
 
 // =======================================================
 

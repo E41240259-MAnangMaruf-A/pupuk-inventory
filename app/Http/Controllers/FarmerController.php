@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Farmer;
+use App\Models\FarmerSubmission;
 use Illuminate\Http\Request;
 
 class FarmerController extends Controller
@@ -10,36 +11,49 @@ class FarmerController extends Controller
     public function index()
     {
         $farmers = Farmer::all();
-        return view('farmers.index', compact('farmers'));
+        $pendingSubmissions = FarmerSubmission::pending()->count();
+        return view('farmers.index', compact('farmers', 'pendingSubmissions'));
+    }
+
+    public function show(Farmer $farmer)
+    {
+        return view('farmers.show', compact('farmer'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nik' => 'required|unique:farmers,nik|max:16',
+            'nik' => 'required|unique:farmers,nik|unique:farmer_submissions,nik|max:16',
             'farmer_name' => 'required|max:100',
             'gender' => 'required|in:L,P',
         ]);
 
         Farmer::create($request->all());
-        return redirect()->route('farmers.index')->with('success','Farmer added successfully.');
+        return redirect()->route('farmers.index')->with('success','Data petani berhasil ditambahkan.');
     }
 
     public function update(Request $request, Farmer $farmer)
     {
         $request->validate([
-            'nik' => 'required|max:16|unique:farmers,nik,'.$farmer->id,
+            'nik' => 'required|max:16|unique:farmers,nik,'.$farmer->id.'|unique:farmer_submissions,nik',
             'farmer_name' => 'required|max:100',
             'gender' => 'required|in:L,P',
         ]);
 
         $farmer->update($request->all());
-        return redirect()->route('farmers.index')->with('success','Farmer updated successfully.');
+        return redirect()->route('farmers.index')->with('success','Data petani berhasil diperbarui.');
     }
 
     public function destroy(Farmer $farmer)
     {
         $farmer->delete();
-        return redirect()->route('farmers.index')->with('success','Farmer deleted successfully.');
+        return redirect()->route('farmers.index')->with('success','Data petani berhasil dihapus.');
+    }
+
+    // Method untuk menampilkan pengajuan yang perlu divalidasi
+    public function submissions()
+    {
+        $submissions = FarmerSubmission::pending()->orderBy('submitted_at', 'desc')->get();
+        return view('farmers.submissions', compact('submissions'));
     }
 }
