@@ -34,7 +34,7 @@
         content="admin, estimates, bootstrap, business, corporate, creative, invoice, html5, responsive, Projects">
     <meta name="author" content="Dreamguys - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <title>Dreams Pos Admin Template</title>
+    <title>Inventori Pupuk</title>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('/build/img/favicon.png')}}">
@@ -115,9 +115,13 @@
 </div>
 <!-- /Main Wrapper -->
 
-@component('components.modalpopup')
+@if (Route::is(['fertilizers.stock']))
+@component('components.add-stock-modal', ['fertilizers' => $fertilizers])
 @endcomponent
+@endif
+
 @include('layout.partials.footer-scripts')
+@yield('scripts')
 </body>
 
 </html>

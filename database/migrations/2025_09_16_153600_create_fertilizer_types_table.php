@@ -15,7 +15,7 @@ return new class extends Migration
             $table->decimal('subsidized_price', 10, 2)->nullable();
             $table->decimal('retail_price', 10, 2)->nullable();
             $table->text('description')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_subsidized')->default(false);
             $table->timestamps();
         });
     }

@@ -78,7 +78,7 @@
                                 <li class="submenu-open">
                                         <ul>
                                                 <li class="{{ Request::is('admin-dashboard') ? 'active' : '' }}"><a href="{{url('admin-dashboard')}}"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a></li>
-                                                <li class="{{ Request::is('farmers') ? 'active' : '' }}"><a href="{{url('farmers')}}"><i class="ti ti-users-group fs-16 me-2"></i><span>Data Petani</span></a></li>
+                                                <li class="{{ Request::is('petani*') ? 'active' : '' }}"><a href="{{route('farmers.index')}}"><i class="ti ti-users-group fs-16 me-2"></i><span>Data Petani</span></a></li>
                                                 <li class="submenu">
                                                         <a href="javascript:void(0);" class="{{ Request::is('general-settings','security-settings','notification','activities','connected-apps') ? 'active' : '' }}"><i class="ti ti-settings fs-16 me-2"></i><span>Pengaturan</span><span class="menu-arrow"></span></a>
                                                         <ul>
@@ -91,9 +91,9 @@
                                 <li class="submenu-open">
                                         <h6 class="submenu-hdr">Inventory</h6>
                                         <ul>
-                                                <li class="{{ Request::is('product-list','product-details') ? 'active' : '' }}"><a href="{{url('fertilizers')}}"><i data-feather="box"></i><span>Pupuk</span></a></li>
-                                                <li class="{{ Request::is('low-stocks') ? 'active' : '' }}"><a href="{{url('low-stocks')}}"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Stok Pupuk</span></a></li>
-                                                <li class="{{ Request::is('stock-adjustment') ? 'active' : '' }}"><a href="{{url('stock-adjustment')}}"><i class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
+                                                <li class="{{ Request::is('pupuk*') ? 'active' : '' }}"><a href="{{route('fertilizers.index')}}"><i data-feather="box"></i><span>Pupuk</span></a></li>
+                                                <li class="{{ Request::is('stok-pupuk') ? 'active' : '' }}"><a href="{{route('fertilizers.stock')}}"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Stok Pupuk</span></a></li>
+                                                <li class="{{ Request::is('stock-adjustment') ? 'active' : '' }}"><a href="{{route('stock-adjustment')}}"><i class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
                                         </ul>
                                 </li>
                                 <li class="submenu-open">

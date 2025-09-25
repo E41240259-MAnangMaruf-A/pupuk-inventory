@@ -1,3 +1,174 @@
+@if (Route::is(['fertilizers.stock']))
+    <div class="modal fade" id="add-stock">
+    <div class="modal-dialog add-centered">
+        <div class="modal-content">
+            <div class="page-wrapper p-0 m-0">
+                <div class="content p-0">
+                    <div class="modal-header border-0 custom-modal-header">
+                        <div class="page-title">
+                            <h4> Add Sales</h4>
+                        </div>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="sales-list">
+                                <div class="row">
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Customer Name</label>
+                                            <div class="row">
+                                                <div class="col-lg-10 col-sm-10 col-10">
+                                                    <select class="select">
+                                                        <option>Choose</option>
+                                                        <option>Customer Name</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-2 col-sm-2 col-2 ps-0">
+                                                    <div class="add-icon">
+                                                        <a href="#" class="choose-add"><i
+                                                                data-feather="plus-circle"
+                                                                class="plus"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Date</label>
+                                            <div class="input-groupicon calender-input">
+                                                <i data-feather="calendar" class="info-img"></i>
+                                                <input type="text" class="datetimepicker" placeholder="Choose">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Supplier</label>
+                                            <select class="select">
+                                                <option>Choose</option>
+                                                <option>Supplier Name</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+    <div class="mb-3">
+        <label class="form-label">Fertilizer Name <span class="text-danger ms-1">*</span></label>
+        <select id="fertilizerSelect" class="select">
+            <option value="">Select</option>
+            @foreach ($fertilizers as $fertilizer)
+                <option value="{{ $fertilizer->id }}"
+                        data-name="{{ $fertilizer->fertilizer_name }}">
+                    {{ $fertilizer->fertilizer_name }} ({{ $fertilizer->unit }})
+                </option>
+            @endforeach
+        </select>
+    </div>
+</div>
+
+                                </div>
+
+                                <div class="table-responsive no-pagination">
+                                    <table class="table datanew" id="productTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Qty</th>
+                                                <th>Purchase Price($)</th>
+                                                <th>Discount($)</th>
+                                                <th>Tax(%)</th>
+                                                <th>Tax Amount($)</th>
+                                                <th>Unit Cost($)</th>
+                                                <th>Total Cost(%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- products will be inserted here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 ms-auto">
+                                        <div class="total-order w-100 max-widthauto m-auto mb-4">
+                                            <ul>
+                                                <li>
+                                                    <h4>Order Tax</h4>
+                                                    <h5>$ 0.00</h5>
+                                                </li>
+                                                <li>
+                                                    <h4>Discount</h4>
+                                                    <h5>$ 0.00</h5>
+                                                </li>
+                                                <li>
+                                                    <h4>Shipping</h4>
+                                                    <h5>$ 0.00</h5>
+                                                </li>
+                                                <li>
+                                                    <h4>Grand Total</h4>
+                                                    <h5>$ 0.00</h5>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Order Tax</label>
+                                            <div class="input-groupicon select-code">
+                                                <input type="text" value="0" class="p-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Discount</label>
+                                            <div class="input-groupicon select-code">
+                                                <input type="text" value="0" class="p-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks">
+                                            <label>Shipping</label>
+                                            <div class="input-groupicon select-code">
+                                                <input type="text" value="0" class="p-2">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-6 col-12">
+                                        <div class="input-blocks mb-5">
+                                            <label>Status</label>
+                                            <select class="select">
+                                                <option>Choose</option>
+                                                <option>Completed</option>
+                                                <option>Inprogress</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12 text-end">
+                                        <button type="button" class="btn btn-cancel add-cancel me-3"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-submit add-sale">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /add popup -->
+
+@endif
+
 @if (Route::is(['product-list']))
     <!-- Add Payroll -->
     <div class="offcanvas offcanvas-end em-payrol-add" tabindex="-1" id="offcanvasRight-add">
