@@ -100,6 +100,7 @@
                                     <th>Satuan</th>
                                     <th>Harga Subsidi</th>
                                     <th>Harga Eceran</th>
+                                    <th>Stok Saat Ini</th>
                                     <th>Deskripsi</th>
                                     <th>Status</th>
                                     <th class="no-sort"></th>
@@ -114,6 +115,7 @@
                                         </td>
                                         <td>{{ $fertilizer->retail_price ? 'Rp ' . number_format($fertilizer->retail_price, 2, ',', '.') : '-' }}
                                         </td>
+                                        <td>{{ $fertilizer->current_stock }}</td>
                                         <td>{{ $fertilizer->description ?? '-' }}</td>
                                         <td>
                                             @if ($fertilizer->is_subsidized)

@@ -12,7 +12,11 @@ class FertilizerController extends Controller
 {
     public function index()
     {
-        $fertilizers = FertilizerType::all();
+        $fertilizers = FertilizerType::with('stock')->get()->map(function ($fertilizer) {
+            $fertilizer->current_stock = $fertilizer->stock->current_stock ?? 0;
+            return $fertilizer;
+        });
+        
         return view('fertilizers.index', compact('fertilizers'));
     }
 
@@ -83,9 +87,26 @@ class FertilizerController extends Controller
             'retail_price' => 'nullable|numeric|min:0',
             'description' => 'nullable|string',
             'is_subsidized' => 'nullable|boolean',
+            'initial_stock' => 'numeric',
         ]);
 
-        FertilizerType::create($data);
+        $fertilizerType = FertilizerType::create($data);
+
+        // Buat stok awal (default 0)
+        $stock = FertilizerStock::firstOrCreate(
+            ['fertilizer_type_id' => $fertilizerType->id],
+            ['current_stock' => $data['initial_stock']]
+        );
+
+        // Catat histori stok (awal 0)
+        FertilizerStockHistory::create([
+            'fertilizer_type_id' => $fertilizerType->id,
+            'current_stock' => $data['initial_stock'],
+            'stock_change' => $data['initial_stock'],
+            'type' => 'in',
+            'note' => 'Stok awal',
+            'user_id' => auth()->id(),
+        ]);
 
         return redirect()->route('fertilizers.index')
             ->with('success', 'Fertilizer type added successfully.');
