@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $this->call([FarmerSeeder::class, FarmerSubmissionSeeder::class]);
+        $this->call([FarmerSeeder::class, FarmerSubmissionSeeder::class, SubsidyAllocationSeeder::class]);
 
         User::factory()->create([
             'name' => 'Test User',

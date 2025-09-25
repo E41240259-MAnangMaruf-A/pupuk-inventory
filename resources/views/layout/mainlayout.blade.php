@@ -116,9 +116,12 @@
 <!-- /Main Wrapper -->
 
 @if (Route::is(['fertilizers.stock']))
-@component('components.add-stock-modal', ['fertilizers' => $fertilizers])
+@component('components.stock-management-modal', ['fertilizers' => $fertilizers])
 @endcomponent
 @endif
+
+@component('components.modalpopup')
+@endcomponent
 
 @include('layout.partials.footer-scripts')
 @yield('scripts')

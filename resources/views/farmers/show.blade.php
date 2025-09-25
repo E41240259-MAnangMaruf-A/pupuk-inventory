@@ -79,7 +79,7 @@ $page = 'farmers'; ?>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-bold">Tanggal Registrasi:</label>
-                            <p>{{ $farmer->created_at->format('d/m/Y H:i') }}</p>
+                            <p>{{ $farmer->created_at ? $farmer->created_at->format('d/m/Y H:i') : '-' }}</p>
                         </div>
                     </div>
                 </div>

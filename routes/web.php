@@ -46,7 +46,13 @@ Route::get('/stok-pupuk', [FertilizerController::class, 'stock'])
 
 Route::post('/simpan-stok-pupuk', [FertilizerController::class, 'updateStockIn'])
     ->name('fertilizers.stock.store');
-    
+
+Route::get('/subsidi-pupuk', [FertilizerController::class, 'stockSubsidies'])
+    ->name('fertilizers.stock-subsidies');
+
+Route::post('/simpan-subsidi-pupuk', [FertilizerController::class, 'updateStockSubsidy'])
+    ->name('fertilizers.stock-subsidy.store');
+
 // Routes untuk Data Petani (Admin)
 Route::resource('farmers', FarmerController::class);
 Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->name('farmers.submissions');
@@ -54,7 +60,7 @@ Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->na
 // Routes untuk Data Petani Desa (Pengajuan)
 Route::resource('farmer-submissions', FarmerSubmissionController::class);
 Route::post('/farmer-submissions/{farmerSubmission}/validate', [FarmerSubmissionController::class, 'validate'])
-     ->name('farmer-submissions.validate');
+    ->name('farmer-submissions.validate');
 
 // =======================================================
 

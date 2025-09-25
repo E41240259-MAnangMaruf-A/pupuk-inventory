@@ -116,7 +116,7 @@
                                         <ul>
                                                 <li class="{{ Request::is('pupuk*') ? 'active' : '' }}"><a href="{{route('fertilizers.index')}}"><i data-feather="box"></i><span>Pupuk</span></a></li>
                                                 <li class="{{ Request::is('stok-pupuk') ? 'active' : '' }}"><a href="{{route('fertilizers.stock')}}"><i class="ti ti-trending-up-2 fs-16 me-2"></i><span>Stok Pupuk</span></a></li>
-                                                <li class="{{ Request::is('stock-adjustment') ? 'active' : '' }}"><a href="{{route('stock-adjustment')}}"><i class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
+                                                <li class="{{ Request::is('subsidi-pupuk') ? 'active' : '' }}"><a href="{{route('fertilizers.stock-subsidies')}}"><i class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
                                         </ul>
                                 </li>
                                 <li class="submenu-open">

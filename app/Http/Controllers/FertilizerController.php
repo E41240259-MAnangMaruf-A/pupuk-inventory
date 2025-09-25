@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Farmer;
 use App\Models\FertilizerStock;
 use App\Models\FertilizerStockHistory;
 use App\Models\FertilizerType;
+use App\Models\SubsidyAllocation;
 use DB;
 use Illuminate\Http\Request;
 
@@ -76,6 +78,43 @@ class FertilizerController extends Controller
         }
 
         return redirect()->back()->with('success', 'Stock updated successfully.');
+    }
+
+    // Menampilkan halaman stok pupuk subsidi
+    public function stockSubsidies()
+    {
+        $farmers = Farmer::all();
+        $fertilizers = FertilizerType::where('is_subsidized', true)->get();
+        $allocations = SubsidyAllocation::with(['farmer', 'fertilizerType'])->get();
+
+        return view('fertilizers.stock-subsidies', compact('farmers', 'fertilizers', 'allocations'));
+    }
+
+    // Simpan atau update alokasi stok subsidi
+    public function updateStockSubsidy(Request $request)
+    {
+        $data = $request->validate([
+            'farmer_id'          => 'required|exists:farmers,id',
+            'fertilizer_type_id' => 'required|exists:fertilizer_types,id',
+            'maximum_quota'      => 'required|integer|min:1',
+            'period_start'       => 'required|date',
+            'period_end'         => 'required|date|after_or_equal:period_start',
+        ]);
+
+        $data['used_quota'] = 0;
+        $data['remaining_quota'] = $data['maximum_quota'];
+        $data['status'] = 'active';
+
+        SubsidyAllocation::updateOrCreate(
+            [
+                'farmer_id' => $data['farmer_id'],
+                'fertilizer_type_id' => $data['fertilizer_type_id'],
+            ],
+            $data
+        );
+
+        return redirect()->route('fertilizers.stock-subsidy')
+            ->with('success', 'Subsidy allocation saved successfully.');
     }
 
     public function store(Request $request)
