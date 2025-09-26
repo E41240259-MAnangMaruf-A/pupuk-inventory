@@ -78,7 +78,7 @@
                         <ul>
                                 <li class="submenu-open">
                                         <ul>
-                                                <li class="{{ Request::is('admin-dashboard') ? 'active' : '' }}"><a href="{{url('admin-dashboard')}}"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a></li>
+                                                <li class="{{ Request::is('dashboard/*') ? 'active' : '' }}"><a href="{{url('dashboard/admin-koperasi')}}"><i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span></a></li>
                                                 
                                                 <!-- Data Petani Menu dengan Badge -->
                                                 <li class="{{ Request::is('petani*') ? 'active' : '' }}">
@@ -100,14 +100,6 @@
                                                         <i class="ti ti-user-plus fs-16 me-2"></i>
                                                         <span>Data Petani Desa</span>
                                                     </a>
-                                                </li>
-                                                
-                                                <li class="submenu">
-                                                        <a href="javascript:void(0);" class="{{ Request::is('general-settings','security-settings','notification','activities','connected-apps') ? 'active' : '' }}"><i class="ti ti-settings fs-16 me-2"></i><span>Pengaturan</span><span class="menu-arrow"></span></a>
-                                                        <ul>
-                                                                <li><a href="{{url('general-settings')}}" class="{{ Request::is('general-settings') ? 'active' : '' }}">Profil Koperasi</a></li>
-                                                                <li><a href="{{url('security-settings')}}" class="{{ Request::is('security-settings') ? 'active' : '' }}">Profil Desa</a></li>
-                                                        </ul>
                                                 </li>
                                         </ul>
                                 </li>

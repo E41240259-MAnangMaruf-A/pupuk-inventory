@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,13 +14,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         $this->call([FarmerSeeder::class, FarmerSubmissionSeeder::class, SubsidyAllocationSeeder::class]);
 
+        // Admin Desa
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'admin@example.com',
+            'name' => 'Admin Desa',
+            'email' => 'admin-desa@example.com',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin_desa',
+        ]);
+
+        // Admin Koperasi
+        User::factory()->create([
+            'name' => 'Admin Koperasi',
+            'email' => 'admin-koperasi@example.com',
+            'password' => Hash::make('admin123'),
+            'role' => 'admin_koperasi',
+        ]);
+
+        // Kasir Koperasi
+        User::factory()->create([
+            'name' => 'Kasir Koperasi',
+            'email' => 'kasir-koperasi@example.com',
+            'password' => Hash::make('kasir123'),
+            'role' => 'kasir_koperasi',
+        ]);
+
+        // Kepala Desa
+        User::factory()->create([
+            'name' => 'Kepala Desa',
+            'email' => 'kepala-desa@example.com',
+            'password' => Hash::make('kepala123'),
+            'role' => 'kepala_desa',
         ]);
     }
 }
