@@ -32,11 +32,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', function () {
-    return view('welcome'); // won't actually show if user is logged in
+    return view('dashboard.admin-desa');
 })->middleware('redirect.dashboard');
 
 Route::get('/index', function () {
-    return view('welcome'); // won't actually show if user is logged in
+    return view('dashboard.admin-desa');
 })->name('index')->middleware('redirect.dashboard');
 
 
