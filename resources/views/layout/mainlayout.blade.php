@@ -1,31 +1,42 @@
 <!DOCTYPE html>
-@if (!Route::is(['layout-horizontal','layout-detached','layout-modern','layout-two-column','layout-hovered','layout-boxed','layout-rtl','layout-dark']))
-<html lang="en">
+@if (
+    !Route::is([
+        'layout-horizontal',
+        'layout-detached',
+        'layout-modern',
+        'layout-two-column',
+        'layout-hovered',
+        'layout-boxed',
+        'layout-rtl',
+        'layout-dark',
+    ]))
+    <html lang="en">
 @endif
 @if (Route::is(['layout-horizontal']))
-<html lang="en" data-layout="horizontal">
+    <html lang="en" data-layout="horizontal">
 @endif
 @if (Route::is(['layout-detached']))
-<html lang="en" data-layout="detached">
+    <html lang="en" data-layout="detached">
 @endif
 @if (Route::is(['layout-modern']))
-<html lang="en" data-layout="modern">
+    <html lang="en" data-layout="modern">
 @endif
 @if (Route::is(['layout-two-column']))
-<html lang="en" data-layout="twocolumn">
+    <html lang="en" data-layout="twocolumn">
 @endif
 @if (Route::is(['layout-hovered']))
-<html lang="en" data-layout="layout-hovered">
+    <html lang="en" data-layout="layout-hovered">
 @endif
 @if (Route::is(['layout-boxed']))
-<html lang="en" data-layout="default" data-width="box">
+    <html lang="en" data-layout="default" data-width="box">
 @endif
 @if (Route::is(['layout-rtl']))
-<html lang="en" data-layout-mode="light_mode">
+    <html lang="en" data-layout-mode="light_mode">
 @endif
 @if (Route::is(['layout-dark']))
-<html lang="en" data-theme="dark">
+    <html lang="en" data-theme="dark">
 @endif
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -37,77 +48,207 @@
     <title>Inventori Pupuk</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('/build/img/favicon.png')}}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('/build/img/favicon.png') }}">
 
     @include('layout.partials.head')
 </head>
 
 
-@if (!Route::is(['under-maintenance', 'coming-soon', 'error-404', 'error-500','two-step-verification-3','two-step-verification-2','two-step-verification','email-verification-3','email-verification-2','email-verification','reset-password-3','reset-password-2','reset-password','forgot-password-3','forgot-password-2','forgot-password','register-3','register-2','register','signin-3','signin-2','signin','success','success-2','success-3','layout-horizontal',
-'layout-hovered','layout-boxed','layout-rtl','pos','pos-2','pos-3','pos-4','pos-5']))
+@if (
+    !Route::is([
+        'under-maintenance',
+        'coming-soon',
+        'error-404',
+        'error-500',
+        'two-step-verification-3',
+        'two-step-verification-2',
+        'two-step-verification',
+        'email-verification-3',
+        'email-verification-2',
+        'email-verification',
+        'reset-password-3',
+        'reset-password-2',
+        'reset-password',
+        'forgot-password-3',
+        'forgot-password-2',
+        'forgot-password',
+        'register-3',
+        'register-2',
+        'register',
+        'signin-3',
+        'signin-2',
+        'signin',
+        'success',
+        'success-2',
+        'success-3',
+        'layout-horizontal',
+        'layout-hovered',
+        'layout-boxed',
+        'layout-rtl',
+        'pos',
+        'pos-2',
+        'pos-3',
+        'pos-4',
+        'pos-5',
+    ]))
 
     <body>
 @endif
 @if (Route::is(['layout-horizontal']))
-<body class="menu-horizontal">
+
+    <body class="menu-horizontal">
 @endif
 @if (Route::is(['layout-hovered']))
-<body class="mini-sidebar expand-menu">
+
+    <body class="mini-sidebar expand-menu">
 @endif
 @if (Route::is(['layout-boxed']))
-<body class="mini-sidebar layout-box-mode">
+
+    <body class="mini-sidebar layout-box-mode">
 @endif
 @if (Route::is(['layout-rtl']))
-<body class="layout-mode-rtl">
+
+    <body class="layout-mode-rtl">
 @endif
 
 @if (Route::is(['under-maintenance', 'coming-soon', 'error-404', 'error-500']))
 
     <body class="error-page">
 @endif
-@if (Route::is(['two-step-verification','email-verification','reset-password','forgot-password','register-2','register','signin','success']))
+@if (Route::is([
+        'two-step-verification',
+        'email-verification',
+        'reset-password',
+        'forgot-password',
+        'register-2',
+        'register',
+        'signin',
+        'success',
+    ]))
 
     <body class="account-page">
 @endif
 
-@if(Route::is(['two-step-verification-3','two-step-verification-2','success-2','success-3','signin-3','signin-2','reset-password-3','reset-password-2','forgot-password-3','forgot-password-2','email-verification-3','email-verification-2','register-3']))
+@if (Route::is([
+        'two-step-verification-3',
+        'two-step-verification-2',
+        'success-2',
+        'success-3',
+        'signin-3',
+        'signin-2',
+        'reset-password-3',
+        'reset-password-2',
+        'forgot-password-3',
+        'forgot-password-2',
+        'email-verification-3',
+        'email-verification-2',
+        'register-3',
+    ]))
+
     <body class="account-page bg-white">
 @endif
 
-@if(Route::is(['lock-screen']))
-    <img src="{{URL::asset('build/img/bg/lock-screen-bg.png')}}" alt="bg" class="lock-screen-bg position-absolute img-fluid d-sm-none d-md-none d-lg-flex">
+@if (Route::is(['lock-screen']))
+    <img src="{{ URL::asset('build/img/bg/lock-screen-bg.png') }}" alt="bg"
+        class="lock-screen-bg position-absolute img-fluid d-sm-none d-md-none d-lg-flex">
 @endif
 
-@if(Route::is(['pos','pos-2','pos-3','pos-4','pos-5']))
-<body class="pos-page">
+@if (Route::is(['pos', 'pos-2', 'pos-3', 'pos-4', 'pos-5']))
+
+    <body class="pos-page">
 @endif
 @component('components.loader')
 @endcomponent
 <!-- Main Wrapper -->
-@if (!Route::is(['lock-screen','pos','pos-3','pos-4','pos-5']))
+@if (!Route::is(['lock-screen', 'pos', 'pos-3', 'pos-4', 'pos-5']))
     <div class="main-wrapper">
 @endif
 @if (Route::is(['lock-screen']))
     <div class="main-wrapper login-body">
 @endif
 @if (Route::is(['pos']))
-
-<div class="main-wrapper pos-five">
+    <div class="main-wrapper pos-five">
 @endif
 @if (Route::is(['pos-3']))
-<div class="main-wrapper pos-two">
+    <div class="main-wrapper pos-two">
 @endif
 @if (Route::is(['pos-4']))
-<div class="main-wrapper pos-three">
+    <div class="main-wrapper pos-three">
 @endif
 @if (Route::is(['pos-5']))
-<div class="main-wrapper pos-three pos-four">
- @endif
-@if (!Route::is(['under-maintenance', 'coming-soon','error-404','error-500','two-step-verification-3','two-step-verification-2','two-step-verification','email-verification-3','email-verification-2','email-verification','reset-password-3','reset-password-2','reset-password','forgot-password-3','forgot-password-2','forgot-password','register-3','register-2','register','signin-3','signin-2','signin','success','success-2','success-3','lock-screen']))
+    <div class="main-wrapper pos-three pos-four">
+@endif
+@if (
+    !Route::is([
+        'under-maintenance',
+        'coming-soon',
+        'error-404',
+        'error-500',
+        'two-step-verification-3',
+        'two-step-verification-2',
+        'two-step-verification',
+        'email-verification-3',
+        'email-verification-2',
+        'email-verification',
+        'reset-password-3',
+        'reset-password-2',
+        'reset-password',
+        'forgot-password-3',
+        'forgot-password-2',
+        'forgot-password',
+        'register-3',
+        'register-2',
+        'register',
+        'signin-3',
+        'signin-2',
+        'signin',
+        'success',
+        'success-2',
+        'success-3',
+        'lock-screen',
+    ]))
     @include('layout.partials.header')
 @endif
-@if (!Route::is(['under-maintenance', 'coming-soon','error-404','error-500','two-step-verification-3','two-step-verification-2','two-step-verification','email-verification-3','email-verification-2','email-verification','reset-password-3','reset-password-2','reset-password','forgot-password-3','forgot-password-2','forgot-password','register-3','register-2','register','signin-3','signin-2','signin','success','success-2','success-3','lock-screen']))
-    @include('layout.partials.sidebar')
+@if (
+    !Route::is([
+        'under-maintenance',
+        'coming-soon',
+        'error-404',
+        'error-500',
+        'two-step-verification-3',
+        'two-step-verification-2',
+        'two-step-verification',
+        'email-verification-3',
+        'email-verification-2',
+        'email-verification',
+        'reset-password-3',
+        'reset-password-2',
+        'reset-password',
+        'forgot-password-3',
+        'forgot-password-2',
+        'forgot-password',
+        'register-3',
+        'register-2',
+        'register',
+        'signin-3',
+        'signin-2',
+        'signin',
+        'success',
+        'success-2',
+        'success-3',
+        'lock-screen',
+    ]))
+
+    @if (Auth::user()->role == 'kepala_desa')
+        @include('layout.partials.sidebar-kepala-desa')
+    @elseif(Auth::user()->role == 'admin_desa')
+        @include('layout.partials.sidebar-admin-desa')
+    @elseif(Auth::user()->role == 'admin_koperasi')
+        @include('layout.partials.sidebar-admin-koperasi')
+    @elseif(Auth::user()->role == 'kasir_koperasi')
+        @include('layout.partials.sidebar-kasir-koperasi')
+    @endif
+
     @include('layout.partials.collapsed-sidebar')
     @include('layout.partials.horizontal-sidebar')
 @endif
@@ -116,8 +257,8 @@
 <!-- /Main Wrapper -->
 
 @if (Route::is(['fertilizers.stock']))
-@component('components.stock-management-modal', ['fertilizers' => $fertilizers])
-@endcomponent
+    @component('components.stock-management-modal', ['fertilizers' => $fertilizers])
+    @endcomponent
 @endif
 
 @component('components.modalpopup')

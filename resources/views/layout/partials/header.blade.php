@@ -1,16 +1,16 @@
-@if(!Route::is(['pos', 'pos-2', 'pos-3', 'pos-4', 'pos-5']))
+@if (!Route::is(['pos', 'pos-2', 'pos-3', 'pos-4', 'pos-5']))
     <div class="header">
         <div class="main-header">
             <!-- Logo -->
             <div class="header-left active">
-                <a href="{{url('index')}}" class="logo logo-normal">
-                    <img src="{{URL::asset('build/img/logo.svg')}}" alt="Img">
+                <a href="{{ url('index') }}" class="logo logo-normal">
+                    <img src="{{ URL::asset('build/img/logo.svg') }}" alt="Img">
                 </a>
-                <a href="{{url('index')}}" class="logo logo-white">
-                    <img src="{{URL::asset('build/img/logo-white.svg')}}" alt="Img">
+                <a href="{{ url('index') }}" class="logo logo-white">
+                    <img src="{{ URL::asset('build/img/logo-white.svg') }}" alt="Img">
                 </a>
-                <a href="{{url('index')}}" class="logo-small">
-                    <img src="{{URL::asset('build/img/logo-small.png')}}" alt="Img">
+                <a href="{{ url('index') }}" class="logo-small">
+                    <img src="{{ URL::asset('build/img/logo-small.png') }}" alt="Img">
                 </a>
             </div>
             <!-- /Logo -->
@@ -40,7 +40,7 @@
                                 </div>
                                 <span class="input-group-text">
                                     <kbd class="d-flex align-items-center"><img
-                                            src="{{URL::asset('build/img/icons/command.svg')}}" alt="img"
+                                            src="{{ URL::asset('build/img/icons/command.svg') }}" alt="img"
                                             class="me-1">K</kbd>
                                 </span>
                             </div>
@@ -63,14 +63,14 @@
                                     <h6><span><i data-feather="user" class="feather-16"></i></span>Customers</h6>
                                     <ul class="customers">
                                         <li><a href="javascript:void(0);">Aron Varu<img
-                                                    src="{{URL::asset('build/img/profiles/avator1.jpg')}}" alt="Img"
-                                                    class="img-fluid"></a></li>
+                                                    src="{{ URL::asset('build/img/profiles/avator1.jpg') }}"
+                                                    alt="Img" class="img-fluid"></a></li>
                                         <li><a href="javascript:void(0);">Jonita<img
-                                                    src="{{URL::asset('build/img/profiles/avatar-01.jpg')}}" alt="Img"
-                                                    class="img-fluid"></a></li>
+                                                    src="{{ URL::asset('build/img/profiles/avatar-01.jpg') }}"
+                                                    alt="Img" class="img-fluid"></a></li>
                                         <li><a href="javascript:void(0);">Aaron<img
-                                                    src="{{URL::asset('build/img/profiles/avatar-10.jpg')}}" alt="Img"
-                                                    class="img-fluid"></a></li>
+                                                    src="{{ URL::asset('build/img/profiles/avatar-10.jpg') }}"
+                                                    alt="Img" class="img-fluid"></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,31 +80,32 @@
                 <!-- /Search -->
 
                 <li class="nav-item nav-item-box">
-                    <a href="{{url('general-settings')}}"><i class="ti ti-settings"></i></a>
+                    <a href="{{ url('general-settings') }}"><i class="ti ti-settings"></i></a>
                 </li>
                 <li class="nav-item dropdown has-arrow main-drop profile-nav">
                     <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
                         <span class="user-info p-0">
                             <span class="user-letter">
-                                <img src="{{URL::asset('build/img/profiles/avator1.jpg')}}" alt="Img" class="img-fluid">
+                                <img src="{{ URL::asset('build/img/profiles/avator1.jpg') }}" alt="Img"
+                                    class="img-fluid">
                             </span>
                         </span>
                     </a>
                     <div class="dropdown-menu menu-drop-user">
                         <div class="profileset d-flex align-items-center">
                             <span class="user-img me-2">
-                                <img src="{{URL::asset('build/img/profiles/avator1.jpg')}}" alt="Img">
+                                <img src="{{ URL::asset('build/img/profiles/avator1.jpg') }}" alt="Img">
                             </span>
                             <div>
-                                <h6 class="fw-medium">John Smilga</h6>
-                                <p>Admin</p>
+                                <h6 class="fw-medium">{{ Auth::user()->name }}</h6>
+                                <p>{{ ucwords(str_replace('_', ' ', Auth::user()->role)) }}</p>
                             </div>
                         </div>
-                        <a class="dropdown-item" href="{{url('profile')}}"><i
+                        <a class="dropdown-item" href="{{ url('profile') }}"><i
                                 class="ti ti-user-circle me-2"></i>MyProfile</a>
-                        <a class="dropdown-item" href="{{url('sales-report')}}"><i
+                        <a class="dropdown-item" href="{{ url('sales-report') }}"><i
                                 class="ti ti-file-text me-2"></i>Reports</a>
-                        <a class="dropdown-item" href="{{url('general-settings')}}"><i
+                        <a class="dropdown-item" href="{{ url('general-settings') }}"><i
                                 class="ti ti-settings-2 me-2"></i>Settings</a>
                         <hr class="my-2">
                         <a class="dropdown-item logout pb-0" href="{{ route('signout') }}">
@@ -120,9 +121,9 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{url('profile')}}">My Profile</a>
-                    <a class="dropdown-item" href="{{url('general-settings')}}">Settings</a>
-                    <a class="dropdown-item" href="{{url('signin')}}">Logout</a>
+                    <a class="dropdown-item" href="{{ url('profile') }}">My Profile</a>
+                    <a class="dropdown-item" href="{{ url('general-settings') }}">Settings</a>
+                    <a class="dropdown-item" href="{{ url('signin') }}">Logout</a>
                 </div>
             </div>
             <!-- /Mobile Menu -->
@@ -131,21 +132,20 @@
 @endif
 
 
-@if(Route::is(['pos', 'pos-2', 'pos-3', 'pos-4', 'pos-5']))
-
+@if (Route::is(['pos', 'pos-2', 'pos-3', 'pos-4', 'pos-5']))
     <!-- Header -->
     <div class="header pos-header">
 
         <!-- Logo -->
         <div class="header-left active">
-            <a href="{{url('index')}}" class="logo logo-normal">
-                <img src="{{URL::asset('build/img/logo.svg')}}" alt="Img">
+            <a href="{{ url('index') }}" class="logo logo-normal">
+                <img src="{{ URL::asset('build/img/logo.svg') }}" alt="Img">
             </a>
-            <a href="{{url('index')}}" class="logo logo-white">
-                <img src="{{URL::asset('build/img/logo-white.svg')}}" alt="Img">
+            <a href="{{ url('index') }}" class="logo logo-white">
+                <img src="{{ URL::asset('build/img/logo-white.svg') }}" alt="Img">
             </a>
-            <a href="{{url('index')}}" class="logo-small">
-                <img src="{{URL::asset('build/img/logo-small.png')}}" alt="Img">
+            <a href="{{ url('index') }}" class="logo-small">
+                <img src="{{ URL::asset('build/img/logo-small.png') }}" alt="Img">
             </a>
         </div>
         <!-- /Logo -->
@@ -164,22 +164,25 @@
             <!-- Search -->
             <li class="nav-item time-nav">
                 <span class="bg-teal text-white d-inline-flex align-items-center"><img
-                        src="{{URL::asset('build/img/icons/clock-icon.svg')}}" alt="img" class="me-2">09:25:32</span>
+                        src="{{ URL::asset('build/img/icons/clock-icon.svg') }}" alt="img"
+                        class="me-2">09:25:32</span>
             </li>
             <!-- /Search -->
 
             <li class="nav-item pos-nav">
-                <a href="{{url('index')}}" class="btn btn-purple btn-md d-inline-flex align-items-center">
+                <a href="{{ url('index') }}" class="btn btn-purple btn-md d-inline-flex align-items-center">
                     <i class="ti ti-world me-1"></i>Dashboard
                 </a>
             </li>
 
             <!-- Select Store -->
             <li class="nav-item dropdown has-arrow main-drop select-store-dropdown">
-                <a href="javascript:void(0);" class="dropdown-toggle nav-link select-store" data-bs-toggle="dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle nav-link select-store"
+                    data-bs-toggle="dropdown">
                     <span class="user-info">
                         <span class="user-letter">
-                            <img src="{{URL::asset('build/img/store/store-01.png')}}" alt="Store Logo" class="img-fluid">
+                            <img src="{{ URL::asset('build/img/store/store-01.png') }}" alt="Store Logo"
+                                class="img-fluid">
                         </span>
                         <span class="user-detail">
                             <span class="user-name">Freshmart</span>
@@ -188,19 +191,22 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="{{URL::asset('build/img/store/store-01.png')}}" alt="Store Logo"
+                        <img src="{{ URL::asset('build/img/store/store-01.png') }}" alt="Store Logo"
                             class="img-fluid">Freshmart
                     </a>
                     <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="{{URL::asset('build/img/store/store-02.png')}}" alt="Store Logo" class="img-fluid">Grocery
+                        <img src="{{ URL::asset('build/img/store/store-02.png') }}" alt="Store Logo"
+                            class="img-fluid">Grocery
                         Apex
                     </a>
                     <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="{{URL::asset('build/img/store/store-03.png')}}" alt="Store Logo" class="img-fluid">Grocery
+                        <img src="{{ URL::asset('build/img/store/store-03.png') }}" alt="Store Logo"
+                            class="img-fluid">Grocery
                         Bevy
                     </a>
                     <a href="javascript:void(0);" class="dropdown-item">
-                        <img src="{{URL::asset('build/img/store/store-04.png')}}" alt="Store Logo" class="img-fluid">Grocery
+                        <img src="{{ URL::asset('build/img/store/store-04.png') }}" alt="Store Logo"
+                            class="img-fluid">Grocery
                         Eden
                     </a>
                 </div>
@@ -219,35 +225,41 @@
             </li>
             <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-title="Cash Register">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#cash-register"><i class="ti ti-cash"></i></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#cash-register"><i
+                        class="ti ti-cash"></i></a>
             </li>
             <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-title="Print Last Reciept">
                 <a href="#"><i class="ti ti-printer"></i></a>
             </li>
-            <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Today’s Sale">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#today-sale"><i class="ti ti-progress"></i></a>
+            <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-title="Today’s Sale">
+                <a href="#" data-bs-toggle="modal" data-bs-target="#today-sale"><i
+                        class="ti ti-progress"></i></a>
             </li>
             <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-title="Today’s Profit">
                 <a href="#" data-bs-toggle="modal" data-bs-target="#today-profit"><i
                         class="ti ti-chart-infographic"></i></a>
             </li>
-            <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="POS Settings">
-                <a href="{{url('pos-settings')}}"><i class="ti ti-settings"></i></a>
+            <li class="nav-item nav-item-box" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-title="POS Settings">
+                <a href="{{ url('pos-settings') }}"><i class="ti ti-settings"></i></a>
             </li>
             <li class="nav-item dropdown has-arrow main-drop profile-nav">
                 <a href="javascript:void(0);" class="nav-link userset" data-bs-toggle="dropdown">
                     <span class="user-info p-0">
                         <span class="user-letter">
-                            <img src="{{URL::asset('build/img/profiles/avator1.jpg')}}" alt="Img" class="img-fluid">
+                            <img src="{{ URL::asset('build/img/profiles/avator1.jpg') }}" alt="Img"
+                                class="img-fluid">
                         </span>
                     </span>
                 </a>
                 <div class="dropdown-menu menu-drop-user">
                     <div class="profilename">
                         <div class="profileset">
-                            <span class="user-img"><img src="{{URL::asset('build/img/profiles/avator1.jpg')}}" alt="Img">
+                            <span class="user-img"><img src="{{ URL::asset('build/img/profiles/avator1.jpg') }}"
+                                    alt="Img">
                                 <span class="status online"></span></span>
                             <div class="profilesets">
                                 <h6>John Smilga</h6>
@@ -255,13 +267,15 @@
                             </div>
                         </div>
                         <hr class="m-0">
-                        <a class="dropdown-item" href="{{url('profile')}}"><i class="me-2" data-feather="user"></i>My
+                        <a class="dropdown-item" href="{{ url('profile') }}"><i class="me-2"
+                                data-feather="user"></i>My
                             Profile</a>
-                        <a class="dropdown-item" href="{{url('general-settings')}}"><i class="me-2"
+                        <a class="dropdown-item" href="{{ url('general-settings') }}"><i class="me-2"
                                 data-feather="settings"></i>Settings</a>
                         <hr class="m-0">
-                        <a class="dropdown-item logout pb-0" href="{{url('signin')}}"><img
-                                src="{{URL::asset('build/img/icons/log-out.svg')}}" class="me-2" alt="img">Logout</a>
+                        <a class="dropdown-item logout pb-0" href="{{ url('signin') }}"><img
+                                src="{{ URL::asset('build/img/icons/log-out.svg') }}" class="me-2"
+                                alt="img">Logout</a>
                     </div>
                 </div>
             </li>
@@ -273,9 +287,9 @@
             <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                 aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="{{url('profile')}}">My Profile</a>
-                <a class="dropdown-item" href="{{url('general-settings')}}">Settings</a>
-                <a class="dropdown-item" href="{{url('signin')}}">Logout</a>
+                <a class="dropdown-item" href="{{ url('profile') }}">My Profile</a>
+                <a class="dropdown-item" href="{{ url('general-settings') }}">Settings</a>
+                <a class="dropdown-item" href="{{ url('signin') }}">Logout</a>
             </div>
         </div>
         <!-- /Mobile Menu -->

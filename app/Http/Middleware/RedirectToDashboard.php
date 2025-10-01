@@ -10,7 +10,6 @@ class RedirectToDashboard
     public function handle($request, Closure $next)
     {
         if (Auth::check()) {
-            // Redirect user to their corresponding dashboard
             switch (Auth::user()->role) {
                 case 'admin_desa':
                     return redirect()->route('dashboard.admin-desa');
@@ -21,6 +20,8 @@ class RedirectToDashboard
                 case 'kepala_desa':
                     return redirect()->route('dashboard.kepala-desa');
             }
+        } else {
+            return route('signin');
         }
 
         return $next($request);

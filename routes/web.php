@@ -33,11 +33,11 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/', function () {
     return view('dashboard.admin-desa');
-})->middleware('redirect.dashboard');
+})->name('index')->middleware(['auth', 'redirect.dashboard']);
 
 Route::get('/index', function () {
     return view('dashboard.admin-desa');
-})->name('index')->middleware('redirect.dashboard');
+})->name('index')->middleware(['auth', 'redirect.dashboard']);
 
 
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -58,31 +58,40 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         ->name('kepala-desa');
 });
 
-Route::resource('petani', FarmerController::class)->names('farmers');
+Route::middleware(['auth', 'role:admin_koperasi,kepala_desa'])->group(function () {
+    Route::resource('petani', FarmerController::class)->names('farmers');
+});
 
-Route::resource('pupuk', FertilizerController::class)->names('fertilizers')->except(['create'])->parameters(['pupuk' => 'fertilizer']);
+Route::middleware(['auth', 'role:admin_koperasi'])->group(function () {
+    Route::resource('pupuk', FertilizerController::class)->names('fertilizers')->except(['create'])->parameters(['pupuk' => 'fertilizer']);
 
-Route::get('/tambah-pupuk', function () {
-    return view('fertilizers.add-fertilizer');
-})->name('fertilizers.create');
+    Route::get('/tambah-pupuk', function () {
+        return view('fertilizers.add-fertilizer');
+    })->name('fertilizers.create');
 
-Route::get('/stok-pupuk', [FertilizerController::class, 'stock'])
-    ->name('fertilizers.stock');
+    Route::get('/stok-pupuk', [FertilizerController::class, 'stock'])
+        ->name('fertilizers.stock');
 
-Route::post('/simpan-stok-pupuk', [FertilizerController::class, 'updateStockIn'])
-    ->name('fertilizers.stock.store');
+    Route::post('/simpan-stok-pupuk', [FertilizerController::class, 'updateStockIn'])
+        ->name('fertilizers.stock.store');
 
-Route::get('/subsidi-pupuk', [FertilizerController::class, 'stockSubsidies'])
-    ->name('fertilizers.stock-subsidies');
+    Route::get('/subsidi-pupuk', [FertilizerController::class, 'stockSubsidies'])
+        ->name('fertilizers.stock-subsidies');
 
-Route::post('/simpan-subsidi-pupuk', [FertilizerController::class, 'updateStockSubsidy'])
-    ->name('fertilizers.stock-subsidy.store');
+    Route::post('/simpan-subsidi-pupuk', [FertilizerController::class, 'updateStockSubsidy'])
+        ->name('fertilizers.stock-subsidy.store');
+});
 
-// Routes untuk Data Petani (Admin)
-Route::resource('farmers', FarmerController::class);
-Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->name('farmers.submissions');
+Route::middleware(['auth', 'role:admin_desa'])->group(function () {
+    Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->name('farmers.submissions');
 
-// Routes untuk Data Petani Desa (Pengajuan)
-Route::resource('farmer-submissions', FarmerSubmissionController::class);
-Route::post('/farmer-submissions/{farmerSubmission}/validate', [FarmerSubmissionController::class, 'validate'])
-    ->name('farmer-submissions.validate');
+    // Routes untuk Data Petani Desa (Pengajuan)
+    Route::resource('farmer-submissions', FarmerSubmissionController::class);
+    Route::post('/farmer-submissions/{farmerSubmission}/validate', [FarmerSubmissionController::class, 'validate'])
+        ->name('farmer-submissions.validate');
+});
+
+Route::middleware(['auth', 'role:kepala_desa'])->group(function () {
+    // Routes untuk Data Petani (Admin)
+    Route::resource('farmers', FarmerController::class);
+});

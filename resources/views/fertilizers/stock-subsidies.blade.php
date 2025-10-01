@@ -25,13 +25,13 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Petani</th>
-<th>Pupuk</th>
-<th>Kuota Maksimum</th>
-<th>Kuota Terpakai</th>
-<th>Kuota Tersisa</th>
-<th>Periode</th>
-<th>Status</th>
-<th>Aksi</th>
+                                    <th>Pupuk</th>
+                                    <th>Kuota Maksimum</th>
+                                    <th>Kuota Terpakai</th>
+                                    <th>Kuota Tersisa</th>
+                                    <th>Periode</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
