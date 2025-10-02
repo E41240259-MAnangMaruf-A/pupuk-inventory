@@ -83,7 +83,7 @@ Route::middleware(['auth', 'role:admin_koperasi'])->group(function () {
         ->name('fertilizers.stock-subsidy.store');
 });
 
-Route::middleware(['auth', 'role:admin_desa'])->group(function () {
+Route::middleware(['auth', 'role:admin_desa,admin_koperasi'])->group(function () {
     Route::get('/farmers-submissions', [FarmerController::class, 'submissions'])->name('farmers.submissions');
 
     // Routes untuk Data Petani Desa (Pengajuan)
@@ -103,6 +103,8 @@ Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(functio
     Route::get('/ajax/farmers', [FarmerController::class, 'ajaxSearch'])
         ->name('farmers.ajax');
 
+    Route::get('/ajax/fertilizers', [FertilizerController::class, 'ajaxSearch'])
+        ->name('fertilizers.ajax');
 
     Route::get('/transaksi/{transaction}/cetak-struk', [TransactionController::class, 'printReceipt'])
         ->name('transactions.print');

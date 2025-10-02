@@ -66,32 +66,23 @@
                                 </div>
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Date<span class="text-danger ms-1">*</span></label>
+                                        <label class="form-label">Tanggal Transaksi<span
+                                                class="text-danger ms-1">*</span></label>
                                         <div class="input-groupicon calender-input">
                                             <i data-feather="calendar" class="info-img"></i>
-                                            <input type="text" class="datetimepicker form-control"
-                                                placeholder="Choose">
+                                            <input type="text" id="transaction-date"
+                                                class="datetimepicker form-control" placeholder="Pilih Tanggal">
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-sm-6 col-12">
-                                    <div class="mb-3">
-                                        <label class="form-label">Supplier<span
-                                                class="text-danger ms-1">*</span></label>
-                                        <select class="select">
-                                            <option>Select</option>
-                                            <option>Apex Computers</option>
-                                            <option>Beats Headphones</option>
-                                            <option>Dazzle Shoes</option>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Product<span class="text-danger ms-1">*</span></label>
+                                        <label class="form-label">Pupuk<span class="text-danger ms-1">*</span></label>
                                         <div class="input-groupicon select-code">
-                                            <input type="text" class="form-control"
-                                                placeholder="Please type product code and select">
+                                            <select class="form-select fertilizer-select" name="fertilizer_id"
+                                                style="width: 100%;">
+                                                <option value="">Ketik nama pupuk atau scan di sini</option>
+                                            </select>
                                             <div class="addonset">
                                                 <img src="{{ URL::asset('build/img/icons/qrcode-scan.svg') }}"
                                                     alt="img">
@@ -182,6 +173,33 @@
     <!-- JS -->
     <script>
         $(document).ready(function() {
+            $('#transaction-date').datetimepicker({
+                format: 'Y-m-d',
+                defaultDate: new Date()
+            });
+
+            $('.fertilizer-select').select2({
+                placeholder: 'Ketik nama pupuk atau scan di sini',
+                allowClear: true,
+                ajax: {
+                    url: "{{ route('fertilizers.ajax') }}",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            q: params.term // kata kunci pencarian
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: data.results // format JSON harus {id:1, text:"Urea"}
+                        };
+                    },
+                    cache: true
+                },
+                minimumInputLength: 1
+            });
+
             $('.select2-ajax').select2({
                 placeholder: 'Ketik NIK atau Nama',
                 allowClear: true,

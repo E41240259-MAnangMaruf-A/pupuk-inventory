@@ -18,7 +18,7 @@ class FertilizerController extends Controller
             $fertilizer->current_stock = $fertilizer->stock->current_stock ?? 0;
             return $fertilizer;
         });
-        
+
         return view('fertilizers.index', compact('fertilizers'));
     }
 
@@ -94,11 +94,11 @@ class FertilizerController extends Controller
     public function updateStockSubsidy(Request $request)
     {
         $data = $request->validate([
-            'farmer_id'          => 'required|exists:farmers,id',
+            'farmer_id' => 'required|exists:farmers,id',
             'fertilizer_type_id' => 'required|exists:fertilizer_types,id',
-            'maximum_quota'      => 'required|integer|min:1',
-            'period_start'       => 'required|date',
-            'period_end'         => 'required|date|after_or_equal:period_start',
+            'maximum_quota' => 'required|integer|min:1',
+            'period_start' => 'required|date',
+            'period_end' => 'required|date|after_or_equal:period_start',
         ]);
 
         $data['used_quota'] = 0;
@@ -172,5 +172,15 @@ class FertilizerController extends Controller
         $fertilizer->delete();
         return redirect()->route('fertilizers.index')
             ->with('success', 'Fertilizer type deleted successfully.');
+    }
+
+    public function ajaxSearch(Request $request)
+    {
+        $query = $request->get('q', '');
+        $fertilizers = FertilizerType::where('name', 'like', "%$query%")
+            ->select('id', 'name as value') // jQuery UI autocomplete pakai "value"
+            ->get();
+
+        return response()->json(['results' => $fertilizers]);
     }
 }
