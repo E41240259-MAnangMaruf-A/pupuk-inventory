@@ -93,12 +93,12 @@ Route::middleware(['auth', 'role:admin_desa,admin_koperasi'])->group(function ()
 });
 
 Route::middleware(['auth', 'role:kepala_desa'])->group(function () {
-    // Routes untuk Data Petani (Admin)
     Route::resource('farmers', FarmerController::class);
 });
 
 Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(function () {
-    Route::resource('transaksi', TransactionController::class)->names('transactions');
+    Route::resource('transaksi', TransactionController::class)->names('transactions')
+        ->except(['create', 'edit']);
 
     Route::get('/ajax/farmers', [FarmerController::class, 'ajaxSearch'])
         ->name('farmers.ajax');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FertilizerType;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Farmer;
@@ -23,25 +24,20 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions', 'customers'));
     }
 
-    // Menampilkan form transaksi baru
-    public function create()
-    {
-        $farmers = Farmer::all();
-        $fertilizers = Fertilizer::all();
-
-        return view('transactions.create', compact('farmers', 'fertilizers'));
-    }
-
     // Simpan transaksi baru
     public function store(Request $request)
     {
         $request->validate([
             'farmer_id' => 'required|exists:farmers,id',
-            'fertilizer_id' => 'required|exists:fertilizers,id',
+            'fertilizer_id' => 'required|exists:fertilizer_types,id',
             'quantity' => 'required|numeric|min:1',
+        ], [], [
+            'farmer_id' => 'Nama Petani',
+            'fertilizer_id' => 'Pupuk',
+            'quantity' => 'Jumlah',
         ]);
 
-        $fertilizer = Fertilizer::findOrFail($request->fertilizer_id);
+        $fertilizer = FertilizerType::findOrFail($request->fertilizer_id);
 
         // Optional: Cek kuota subsidi jika diperlukan
         if ($fertilizer->is_subsidy && $request->quantity > $fertilizer->subsidy_quota) {
@@ -67,15 +63,6 @@ class TransactionController extends Controller
     public function show(Transaction $transaction)
     {
         return view('transactions.show', compact('transaction'));
-    }
-
-    // Form edit transaksi
-    public function edit(Transaction $transaction)
-    {
-        $farmers = Farmer::all();
-        $fertilizers = Fertilizer::all();
-
-        return view('transactions.edit', compact('transaction', 'farmers', 'fertilizers'));
     }
 
     // Update transaksi

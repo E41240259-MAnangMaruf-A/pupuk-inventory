@@ -177,9 +177,20 @@ class FertilizerController extends Controller
     public function ajaxSearch(Request $request)
     {
         $query = $request->get('q', '');
-        $fertilizers = FertilizerType::where('name', 'like', "%$query%")
-            ->select('id', 'name as value') // jQuery UI autocomplete pakai "value"
-            ->get();
+
+        $fertilizers = FertilizerType::where(function ($q2) use ($query) {
+            $q2->where('fertilizer_name', 'like', "%{$query}%")
+                ->orWhere('fertilizer_code', 'like', "%{$query}%");
+        })
+            ->get([
+                'id',
+                'fertilizer_name as text',
+                'unit',
+                'subsidized_price',
+                'retail_price',
+                'description',
+                'is_subsidized'
+            ]);
 
         return response()->json(['results' => $fertilizers]);
     }
