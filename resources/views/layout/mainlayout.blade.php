@@ -51,8 +51,41 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ URL::asset('/build/img/favicon.png') }}">
 
     @include('layout.partials.head')
-</head>
 
+    <!-- select2 -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        /* Sesuaikan tinggi Select2 */
+        .select2-container .select2-selection--single {
+            height: 38px !important;
+            /* sesuaikan dengan tombol */
+            padding: 6px 12px;
+            /* sesuaikan padding */
+            display: flex;
+            align-items: center;
+        }
+
+        /* Sesuaikan dropdown arrow */
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 2.8;
+            /* agar teks vertical align */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            display: none;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__clear {
+            display: none;
+        }
+    </style>
+
+    @yield('styles')
+
+</head>
 
 @if (
     !Route::is([
@@ -261,11 +294,17 @@
     @endcomponent
 @endif
 
+@if (Route::is(['transactions.index']))
+    @component('components.add-transaction-modal', ['transactions' => $transactions, 'customers' => $customers])
+    @endcomponent
+@endif
+
 @component('components.modalpopup')
 @endcomponent
 
 @include('layout.partials.footer-scripts')
 @yield('scripts')
+
 </body>
 
 </html>

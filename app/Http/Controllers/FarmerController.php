@@ -29,25 +29,25 @@ class FarmerController extends Controller
         ]);
 
         Farmer::create($request->all());
-        return redirect()->route('farmers.index')->with('success','Data petani berhasil ditambahkan.');
+        return redirect()->route('farmers.index')->with('success', 'Data petani berhasil ditambahkan.');
     }
 
     public function update(Request $request, Farmer $farmer)
     {
         $request->validate([
-            'nik' => 'required|max:16|unique:farmers,nik,'.$farmer->id.'|unique:farmer_submissions,nik',
+            'nik' => 'required|max:16|unique:farmers,nik,' . $farmer->id . '|unique:farmer_submissions,nik',
             'farmer_name' => 'required|max:100',
             'gender' => 'required|in:L,P',
         ]);
 
         $farmer->update($request->all());
-        return redirect()->route('farmers.index')->with('success','Data petani berhasil diperbarui.');
+        return redirect()->route('farmers.index')->with('success', 'Data petani berhasil diperbarui.');
     }
 
     public function destroy(Farmer $farmer)
     {
         $farmer->delete();
-        return redirect()->route('farmers.index')->with('success','Data petani berhasil dihapus.');
+        return redirect()->route('farmers.index')->with('success', 'Data petani berhasil dihapus.');
     }
 
     // Method untuk menampilkan pengajuan yang perlu divalidasi
@@ -55,5 +55,26 @@ class FarmerController extends Controller
     {
         $submissions = FarmerSubmission::pending()->orderBy('submitted_at', 'desc')->get();
         return view('farmers.submissions', compact('submissions'));
+    }
+
+    public function ajaxSearch(Request $request)
+    {
+        $term = $request->get('q', '');
+
+        $farmers = Farmer::where('farmer_name', 'LIKE', "%{$term}%")
+            ->orWhere('nik', 'LIKE', "%{$term}%")
+            ->limit(20)
+            ->get();
+
+        $results = [];
+
+        foreach ($farmers as $farmer) {
+            $results[] = [
+                'id' => $farmer->id,
+                'text' => "{$farmer->farmer_name}"
+            ];
+        }
+
+        return response()->json(['results' => $results]);
     }
 }

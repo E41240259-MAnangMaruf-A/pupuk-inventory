@@ -102,7 +102,7 @@
                         class="{{ Request::is('subsidi-pupuk') ? 'active' : '' }}"><i
                             class="ti ti-stairs-up fs-16 me-2"></i><span>Alokasi Subsidi</span></a></li>
 
-                <li><a href="{{ url('pos-orders') }}" class="{{ Request::is('pos-orders') ? 'active' : '' }}"><i
+                <li><a href="{{ route('transactions.index') }}" class="{{ Route::is('transactions*') ? 'active' : '' }}"><i
                             class="ti ti-cash fs-16 me-2"></i><span>Transaksi</span></a></li>
                 <li><a href="{{ url('invoice') }}" class="{{ Request::is('invoice') ? 'active' : '' }}"><i
                             class="ti ti-file-invoice fs-16 me-2"></i><span>Riwayat Transaksi</span></a></li>

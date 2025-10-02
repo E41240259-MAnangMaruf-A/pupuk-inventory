@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FertilizerController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\FarmerController;
@@ -94,4 +95,15 @@ Route::middleware(['auth', 'role:admin_desa'])->group(function () {
 Route::middleware(['auth', 'role:kepala_desa'])->group(function () {
     // Routes untuk Data Petani (Admin)
     Route::resource('farmers', FarmerController::class);
+});
+
+Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(function () {
+    Route::resource('transaksi', TransactionController::class)->names('transactions');
+
+    Route::get('/ajax/farmers', [FarmerController::class, 'ajaxSearch'])
+        ->name('farmers.ajax');
+
+
+    Route::get('/transaksi/{transaction}/cetak-struk', [TransactionController::class, 'printReceipt'])
+        ->name('transactions.print');
 });
