@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([FarmerSeeder::class, FarmerSubmissionSeeder::class, SubsidyAllocationSeeder::class, FertilizerSeeder::class]);
+        $this->call([FarmerSeeder::class, FarmerSubmissionSeeder::class, SubsidyAllocationSeeder::class, FertilizerSeeder::class, CooperativeSeeder::class]);
 
         // Admin Desa
         User::factory()->create([

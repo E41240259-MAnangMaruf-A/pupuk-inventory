@@ -16,8 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->date('transaction_date');
             $table->decimal('total_amount', 12, 2);
-            $table->string('payment_status', 20)->default('pending');
-            $table->string('pickup_status', 20)->default('pending');
+            $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

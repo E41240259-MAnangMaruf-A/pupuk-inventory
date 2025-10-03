@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div class="page-title">
-                        <h4> Add Sales</h4>
+                        <h4> Tambah Transaksi</h4>
                     </div>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -53,7 +53,7 @@
                             <div class="row">
                                 <div class="col-lg-4 col-sm-6 col-12">
                                     <div class="mb-3">
-                                        <label class="form-label">Customer Name<span
+                                        <label class="form-label">Nama Petani<span
                                                 class="text-danger ms-1">*</span></label>
                                         <div class="row">
                                             <div class="col-lg-10 col-sm-10 col-10">
@@ -88,8 +88,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Pupuk<span class="text-danger ms-1">*</span></label>
                                         <div class="input-groupicon select-code">
-                                            <select class="form-select fertilizer-select" name="fertilizer_id"
-                                                style="width: 100%;">
+                                            <select class="form-select fertilizer-select" style="width: 100%;">
                                                 <option value="">Ketik nama pupuk atau scan di sini</option>
                                             </select>
                                             <div class="addonset">
@@ -190,12 +189,12 @@
                     .closest('tr');
 
                 if (existingRow.length > 0) {
-                    let qtyInput = existingRow.find('input.qty');
-                    let currentQty = parseInt(qtyInput.val()) || 0;
-                    qtyInput.val(currentQty + 1);
+                    let quantityInput = existingRow.find('input.quantity');
+                    let currentquantity = parseInt(quantityInput.val()) || 0;
+                    quantityInput.val(currentquantity + 1);
 
-                    let purchasePrice = parseFloat(existingRow.find('input.purchase_price').val()) || 0;
-                    existingRow.find('.subtotal').val((currentQty + 1) * purchasePrice);
+                    let purchasePrice = parseFloat(existingRow.find('input.subsidized_price').val()) || 0;
+                    existingRow.find('.subtotal').val((currentquantity + 1) * purchasePrice);
                 } else {
                     let purchasePrice = data.is_subsidized ? data.subsidized_price : data.retail_price;
 
@@ -205,8 +204,8 @@
                 ${data.text} 
                 <input type="hidden" name="fertilizer_id[]" value="${data.id}">
             </td>
-            <td><input type="number" class="form-control qty" name="qty[]" value="1" min="1"></td>
-            <td><input type="number" class="form-control purchase_price" name="purchase_price[]" value="${purchasePrice || 0}" readonly></td>
+            <td><input type="number" class="form-control quantity" name="quantity[]" value="1" min="1"></td>
+            <td><input type="number" class="form-control subsidized_price" name="subsidized_price[]" value="${purchasePrice || 0}" readonly></td>
             <td><input type="number" class="form-control retail_price" name="retail_price[]" value="${data.retail_price || 0}" readonly></td>
             <td>${data.unit || ''}</td>
             <td>${data.description || ''} ${data.is_subsidized ? '(Subsidi)' : ''}</td>
@@ -219,12 +218,12 @@
                 updateGrandTotal();
             });
 
-            // update subtotal & grand total ketika qty berubah
-            $(document).on('input', '.qty', function() {
+            // update subtotal & grand total ketika quantity berubah
+            $(document).on('input', '.quantity', function() {
                 let row = $(this).closest('tr');
-                let qty = parseFloat($(this).val()) || 0;
-                let price = parseFloat(row.find('input.purchase_price').val()) || 0;
-                row.find('.subtotal').val(qty * price);
+                let quantity = parseFloat($(this).val()) || 0;
+                let price = parseFloat(row.find('input.subsidized_price').val()) || 0;
+                row.find('.subtotal').val(quantity * price);
 
                 updateGrandTotal();
             });

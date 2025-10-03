@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('fertilizer_type_id')->constrained('fertilizer_types')->onDelete('cascade');
             $table->unsignedInteger('quantity');
             $table->decimal('unit_price', 10, 2);
+            $table->boolean('is_subsidized')->default(false);
             $table->decimal('subtotal', 12, 2);
             $table->timestamps();
         });
