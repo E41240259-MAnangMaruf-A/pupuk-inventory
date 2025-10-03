@@ -109,7 +109,8 @@ Route::middleware(['auth', 'role:admin_desa,admin_koperasi'])->group(function ()
 // });
 
 Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(function () {
-    Route::resource('transaksi', TransactionController::class)->names('transactions');
+    Route::resource('transaksi', TransactionController::class)->names('transactions')
+        ->except(['create']);
 
     Route::get('/ajax/farmers', [FarmerController::class, 'ajaxSearch'])
         ->name('farmers.ajax');
