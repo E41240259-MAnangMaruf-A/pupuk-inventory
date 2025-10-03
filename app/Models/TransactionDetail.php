@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TransactionDetail extends Model
 {
-    use HasFactory;
-
     protected $table = 'transaction_details';
-    protected $guarded = [];
+
+    public function fertilizerType()
+    {
+        return $this->belongsTo(FertilizerType::class, 'fertilizer_type_id');
+    }
 }
+
+
