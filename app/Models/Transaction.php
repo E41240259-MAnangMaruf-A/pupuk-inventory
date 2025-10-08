@@ -9,7 +9,6 @@ class Transaction extends Model
 {
     use HasFactory;
 
-<<<<<<< HEAD
     protected $fillable = [
         'customer_id',
         'transaction_date',
@@ -33,14 +32,6 @@ class Transaction extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
-}
-=======
-    protected $table = 'transactions';
-    protected $guarded = [];
-
-    protected $casts = [
-        'transaction_date' => 'date', // atau 'datetime' jika ada waktu
-    ];
 
     // Relasi ke petani
     public function farmer()
@@ -77,4 +68,3 @@ class Transaction extends Model
         return $this->details()->sum('quantity');
     }
 }
->>>>>>> eb65cedaa66c1571fbb3a37ff7e15b84c699fef8
