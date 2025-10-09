@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\FarmerController;
 use App\Http\Controllers\FarmerSubmissionController;
+use App\Http\Controllers\KepalaDesaController;
+use App\Http\Controllers\KepalaDesaDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +19,7 @@ use App\Http\Controllers\FarmerSubmissionController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 // Hanya untuk tamu (belum login)
 Route::middleware('guest')->group(function () {
     Route::get('signin', [CustomAuthController::class, 'index'])->name('signin');
@@ -40,7 +43,6 @@ Route::get('/index', function () {
     return view('dashboard.admin-desa');
 })->name('index')->middleware(['auth', 'redirect.dashboard']);
 
-
 Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/admin-desa', [DashboardController::class, 'adminDesa'])
         ->middleware(['auth', 'role:admin_desa'])
@@ -59,7 +61,16 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
         ->name('kepala-desa');
 });
 
-Route::middleware(['auth', 'role:admin_koperasi,kepala_desa'])->group(function () {
+// ========== PERBAIKAN DI SINI ==========
+
+// HAPUS route farmers untuk kepala desa yang lama (konflik)
+// Route::middleware(['auth', 'role:admin_koperasi,kepala_desa'])->group(function () {
+//     Route::resource('petani', FarmerController::class)->names('farmers');
+// });
+
+// GANTI dengan route terpisah
+Route::middleware(['auth', 'role:admin_koperasi'])->group(function () {
+    // Farmers untuk admin koperasi (bisa CRUD)
     Route::resource('petani', FarmerController::class)->names('farmers');
 });
 
@@ -92,9 +103,10 @@ Route::middleware(['auth', 'role:admin_desa,admin_koperasi'])->group(function ()
         ->name('farmer-submissions.validate');
 });
 
-Route::middleware(['auth', 'role:kepala_desa'])->group(function () {
-    Route::resource('farmers', FarmerController::class);
-});
+// HAPUS route farmers untuk kepala desa yang lama (konflik)
+// Route::middleware(['auth', 'role:kepala_desa'])->group(function () {
+//     Route::resource('farmers', FarmerController::class);
+// });
 
 Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(function () {
     Route::resource('transaksi', TransactionController::class)->names('transactions')
@@ -109,3 +121,54 @@ Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(functio
     Route::get('/transaksi/{transaction}/cetak-struk', [TransactionController::class, 'printReceipt'])
         ->name('transactions.print');
 });
+
+// ========== ROUTE BARU UNTUK KEPALA DESA ==========
+Route::middleware(['auth', 'role:kepala_desa'])->prefix('kepala-desa')->name('kepala-desa.')->group(function () {
+    // Dashboard Kepala Desa
+    Route::get('/dashboard', [KepalaDesaController::class, 'dashboard'])->name('dashboard');
+    
+    // Data Petani (VIEW ONLY)
+    Route::prefix('petani')->name('petani.')->group(function () {
+        Route::get('validated', [KepalaDesaController::class, 'petaniValidated'])->name('validated');
+        Route::get('pending', [KepalaDesaController::class, 'petaniPending'])->name('pending');
+        Route::get('rejected', [KepalaDesaController::class, 'petaniRejected'])->name('rejected');
+        Route::get('{id}', [KepalaDesaController::class, 'showPetani'])->name('show');
+        Route::get('submission/{id}', [KepalaDesaController::class, 'showSubmission'])->name('submission.show');
+    });
+});
+
+// Dashboard routes
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
+    Route::get('/admin-desa', [DashboardController::class, 'adminDesa'])
+        ->middleware(['auth', 'role:admin_desa'])
+        ->name('admin-desa');
+
+    Route::get('/admin-koperasi', [DashboardController::class, 'adminKoperasi'])
+        ->middleware(['auth', 'role:admin_koperasi'])
+        ->name('admin-koperasi');
+
+    Route::get('/kasir-koperasi', [DashboardController::class, 'kasirKoperasi'])
+        ->middleware(['auth', 'role:kasir_koperasi'])
+        ->name('kasir-koperasi');
+
+    // Ganti dengan controller baru
+    Route::get('/kepala-desa', [KepalaDesaDashboardController::class, 'dashboard'])
+        ->middleware(['auth', 'role:kepala_desa'])
+        ->name('kepala-desa');
+});
+
+// Route untuk Kepala Desa (di bagian Kepala Desa)
+Route::middleware(['auth', 'role:kepala_desa'])->prefix('kepala-desa')->name('kepala-desa.')->group(function () {
+    // Dashboard Kepala Desa
+    Route::get('/dashboard', [KepalaDesaDashboardController::class, 'dashboard'])->name('dashboard');
+    
+    // Data Petani (VIEW ONLY)
+    Route::prefix('petani')->name('petani.')->group(function () {
+        Route::get('validated', [KepalaDesaController::class, 'petaniValidated'])->name('validated');
+        Route::get('pending', [KepalaDesaController::class, 'petaniPending'])->name('pending');
+        Route::get('rejected', [KepalaDesaController::class, 'petaniRejected'])->name('rejected');
+        Route::get('{id}', [KepalaDesaController::class, 'showPetani'])->name('show');
+        Route::get('submission/{id}', [KepalaDesaController::class, 'showSubmission'])->name('submission.show');
+    });
+});
+

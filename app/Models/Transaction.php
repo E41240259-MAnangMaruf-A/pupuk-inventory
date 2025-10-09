@@ -9,12 +9,29 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'transactions';
-    protected $guarded = [];
-
-    protected $casts = [
-        'transaction_date' => 'date', // atau 'datetime' jika ada waktu
+    protected $fillable = [
+        'customer_id',
+        'transaction_date',
+        'total_amount',
+        'status'
+        // tambahkan field lainnya
     ];
+
+    /**
+     * Relasi ke TransactionDetail
+     */
+    public function transactionDetails()
+    {
+        return $this->hasMany(TransactionDetail::class, 'transaction_id');
+    }
+
+    /**
+     * Relasi ke Customer (jika ada)
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 
     // Relasi ke petani
     public function farmer()
