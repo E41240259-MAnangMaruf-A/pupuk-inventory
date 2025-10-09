@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('fertilizer_type_id')->constrained('fertilizer_types')->onDelete('cascade');
             $table->unsignedInteger('current_stock')->default(0);
             $table->integer('stock_change')->default(0);
+            $table->integer('final_stock')->default(0);
             $table->enum('type', ['in', 'out'])->default('in');
             $table->string('note')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');

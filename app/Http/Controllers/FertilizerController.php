@@ -70,7 +70,8 @@ class FertilizerController extends Controller
             FertilizerStockHistory::create([
                 'fertilizer_type_id' => $fertId,
                 'current_stock' => $final,
-                'stock_change' => $added,
+                'stock_change' => +$added,
+                'final_stock' => $final,
                 'type' => 'in',
                 'note' => 'Stock added via form',
                 'user_id' => auth()->id(), // if using auth

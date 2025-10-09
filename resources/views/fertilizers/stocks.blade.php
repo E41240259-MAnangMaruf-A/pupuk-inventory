@@ -220,9 +220,8 @@
                                             @foreach ($stockHistories as $history)
                                                 <tr>
                                                     <td>{{ $history->fertilizerType->fertilizer_name ?? '-' }}</td>
-                                                    <td>{{ $history->current_stock - $history->stock_change }}</td>
-                                                    {{-- Previous stock --}}
-                                                    <td>{{ $history->stock_change }}</td>
+                                                    <td>{{ $history->current_stock }}</td>
+                                                    <td>{{ $history->final_stock }}</td>
                                                     <td>
                                                         {{ $history->type === 'in' ? 'Stok Masuk' : ($history->type === 'out' ? 'Stok Keluar' : '-') }}
                                                     </td>

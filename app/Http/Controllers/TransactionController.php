@@ -133,15 +133,15 @@ class TransactionController extends Controller
                     throw new Exception("Stok pupuk tidak mencukupi untuk transaksi ini!");
                 }
 
-
-
-                $stock->current_stock -= $quantity;
+                $current_stock = $stock->current_stock;
+                $final_stock = $stock->current_stock -= $quantity;
                 $stock->save();
 
                 FertilizerStockHistory::create([
                     'fertilizer_type_id' => $fertilizerId,
-                    'current_stock' => $stock->current_stock,
+                    'current_stock' => $current_stock,
                     'stock_change' => -$quantity,
+                    'final_stock' => $final_stock,
                     'type' => 'out',
                     'note' => "Transaksi #" . $transaction->transaction_number,
                     'user_id' => auth()->id(),
