@@ -10,11 +10,18 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',
+        'transaction_number',
+        'farmer_id',
+        'cooperative_id',
+        'user_id',
         'transaction_date',
         'total_amount',
-        'status'
-        // tambahkan field lainnya
+        'payment_status',
+        'notes',
+    ];
+
+    protected $casts = [
+        'transaction_date' => 'date',
     ];
 
     /**
