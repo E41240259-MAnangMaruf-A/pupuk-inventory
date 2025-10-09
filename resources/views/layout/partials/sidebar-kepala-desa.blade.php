@@ -54,15 +54,28 @@
                     </ul>
                 </li>
 
-                <li class="submenu">
+                <!-- Menu Laporan dengan Submenu -->
+                <li class="submenu {{ Request::routeIs('kepala-desa.reports.*') ? 'active' : '' }}">
                     <a href="javascript:void(0);">
                         <i class="ti ti-file-analytics fs-16 me-2"></i><span>Laporan</span>
                         <span class="menu-arrow"></span>
                     </a>
                     <ul>
-                        <li><a href="#">Pergerakan Pupuk</a></li>
-                        <li><a href="#">Alokasi Subsidi & Realisasi</a></li>
-                        <li><a href="#">Laporan Keuangan</a></li>
+                        <li class="{{ Request::routeIs('kepala-desa.reports.fertilizer-movement') ? 'active' : '' }}">
+                            <a href="{{ route('kepala-desa.reports.fertilizer-movement') }}">
+                                <i class="ti ti-arrow-left-right fs-14 me-2"></i>Pergerakan Pupuk
+                            </a>
+                        </li>
+                        <li class="{{ Request::routeIs('kepala-desa.reports.subsidy-allocation') ? 'active' : '' }}">
+                            <a href="{{ route('kepala-desa.reports.subsidy-allocation') }}">
+                                <i class="ti ti-discount fs-14 me-2"></i>Alokasi Subsidi
+                            </a>
+                        </li>
+                        <li class="{{ Request::routeIs('kepala-desa.reports.financial') ? 'active' : '' }}">
+                            <a href="{{ route('kepala-desa.reports.financial') }}">
+                                <i class="ti ti-chart-bar fs-14 me-2"></i>Laporan Keuangan
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 
