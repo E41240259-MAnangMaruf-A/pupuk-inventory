@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cooperative;
+use App\Models\FertilizerStock;
+use App\Models\FertilizerStockHistory;
 use App\Models\FertilizerType;
+use App\Models\SubsidyAllocation;
+use App\Models\SubsidyAllocationHistory;
 use App\Models\TransactionDetail;
 use DB;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Farmer;
@@ -42,9 +47,9 @@ class TransactionController extends Controller
             'farmer_id' => 'Nama Petani',
             'cooperative_id' => 'Koperasi',
             'transaction_date' => 'Tanggal Transaksi',
-            'fertilizer_id.*' => 'Jenis Pupuk',
-            'quantity.*' => 'Jumlah',
-            'retail_price.*' => 'Harga Satuan',
+            'fertilizer_id' => 'Jenis Pupuk',
+            'quantity' => 'Jumlah',
+            'retail_price' => 'Harga Satuan',
         ]);
 
         DB::beginTransaction();
@@ -64,7 +69,8 @@ class TransactionController extends Controller
                 'cooperative_id' => Cooperative::first()->id ?? null,
                 'user_id' => auth()->id(),
                 'transaction_date' => now(),
-                'total_amount' => 0, // sementara
+                'total_amount' => 0,
+                'payment_status' => 'paid',
                 'notes' => $request->notes,
             ]);
 
@@ -72,11 +78,80 @@ class TransactionController extends Controller
 
             foreach ($request->fertilizer_id as $index => $fertilizerId) {
                 $quantity = $request->quantity[$index];
-                $subsidizedPrice = $request->subsidized_price[$index] ?? null;
-                $isSubsidized = $subsidizedPrice ? true : false;
-                $unitPrice = $isSubsidized ? $subsidizedPrice : $request->retail_price[$index];
+
+                // Ambil data subsidi & stok
+                $allocation = SubsidyAllocation::where('farmer_id', $request->farmer_id)
+                    ->where('fertilizer_type_id', $fertilizerId)
+                    ->first();
+
+                $stock = FertilizerStock::where('fertilizer_type_id', $fertilizerId)->first();
+                $fertilizer = FertilizerType::find($fertilizerId);
+
+                if (!$stock) {
+                    throw new Exception("Stok untuk pupuk " . $fertilizer->fertilizer_name . " belum terdaftar!");
+                }
+
+                $usedFromSubsidy = 0;
+                $usedFromStock = 0;
+                $isSubsidized = false;
+                $unitPrice = $request->retail_price[$index];
+
+                // ==============================
+                // 1️⃣ Tentukan sumber pupuk
+                // ==============================
+                if ($allocation && $allocation->remaining_quota >= $quantity) {
+                    // Penuhi dari subsidi sepenuhnya
+                    $usedFromSubsidy = $quantity;
+                    $isSubsidized = true;
+                    $unitPrice = $request->subsidized_price[$index];
+
+                    // Update alokasi subsidi
+                    $allocation->used_quota += $quantity;
+                    $allocation->remaining_quota -= $quantity;
+                    $allocation->save();
+
+                    // Catat histori subsidi
+                    SubsidyAllocationHistory::create([
+                        'subsidy_allocation_id' => $allocation->id,
+                        'fertilizer_type_id' => $fertilizerId,
+                        'transaction_id' => $transaction->id,
+                        'quantity' => $usedFromSubsidy,
+                        'type' => 'use',
+                        'note' => 'Penggunaan subsidi pada transaksi #' . $transaction->transaction_number,
+                    ]);
+                } else {
+                    // Tidak cukup atau tidak punya subsidi → ambil semua dari stok umum
+                    $usedFromStock = $quantity;
+                    $isSubsidized = false;
+                    $unitPrice = $request->retail_price[$index];
+                }
+
+                // ==============================
+                // 2️⃣ Kurangi stok fisik
+                // ==============================
+                if ($stock->current_stock < $quantity) {
+                    throw new Exception("Stok pupuk tidak mencukupi untuk transaksi ini!");
+                }
+
+
+
+                $stock->current_stock -= $quantity;
+                $stock->save();
+
+                FertilizerStockHistory::create([
+                    'fertilizer_type_id' => $fertilizerId,
+                    'current_stock' => $stock->current_stock,
+                    'stock_change' => -$quantity,
+                    'type' => 'out',
+                    'note' => "Transaksi #" . $transaction->transaction_number,
+                    'user_id' => auth()->id(),
+                ]);
+
+                // ==============================
+                // 3️⃣ Simpan detail transaksi
+                // ==============================
                 $subtotal = $quantity * $unitPrice;
-                
+
                 TransactionDetail::create([
                     'transaction_id' => $transaction->id,
                     'fertilizer_type_id' => $fertilizerId,
@@ -89,7 +164,16 @@ class TransactionController extends Controller
                 $totalAmount += $subtotal;
             }
 
-            $transaction->update(['total_amount' => $totalAmount]);
+            $totalPayment = (int) str_replace('.', '', $request->total_payment);
+            $totalChange = (int) str_replace(['Rp.', 'Rp', '.', ' '], '', $request->total_change);
+
+            if ($totalPayment < $totalAmount) {
+                return back()
+                    ->withErrors(['pembayaran' => 'Jumlah pembayaran tidak boleh kurang dari total biaya (Rp ' . number_format($totalAmount, 0, ',', '.') . ').'])
+                    ->withInput();
+            }
+
+            $transaction->update(['total_amount' => $totalAmount, 'total_payment' => $totalPayment, 'total_change' => $totalChange]);
 
             DB::commit();
 

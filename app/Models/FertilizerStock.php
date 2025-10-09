@@ -10,4 +10,10 @@ class FertilizerStock extends Model
     use HasFactory;
     
     protected $guarded = ['id'];
+
+    public function fertilizerType()
+    {
+        return $this->belongsTo(FertilizerType::class, 'fertilizer_type_id');
+    }
+
 }

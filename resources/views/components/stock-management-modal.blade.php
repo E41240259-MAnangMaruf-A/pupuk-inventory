@@ -295,15 +295,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6 col-12">
-                                            <div class="input-blocks">
-                                                <label>Supplier</label>
-                                                <select class="select">
-                                                    <option>Pilih Supplier</option>
-                                                    <option>Nama Supplier</option>
-                                                </select>
-                                            </div>
-                                        </div>
                                         <div class="col-lg-12">
                                             <div class="mb-3">
                                                 <label class="form-label">Nama Pupuk<span
@@ -353,13 +344,6 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-12">
-                                        <div class="input-blocks summer-description-box">
-                                            <label>Cattatan</label>
-                                            <div id="summernote"></div>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
