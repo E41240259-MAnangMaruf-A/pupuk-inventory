@@ -223,36 +223,63 @@
                         // Event: update remaining quota dynamically
                         const qtyInput = row.querySelector('.quantity-input');
 
-                        qtyInput.addEventListener('input', function() {
-                            const qty = parseInt(this.value) || 0;
+                        qtyInput.addEventListener('input', function () {
+    const rawVal = this.value.trim();
+    const qty = rawVal === '' ? null : parseInt(rawVal) || 0;
 
-                            const remainingField = row.querySelector('input[name="remaining_quota[]"]');
-                            const maxQuotaField = row.querySelector('input[name="maximum_quota[]"]');
-                            const usedQuotaField = row.querySelector('input[name="used_quota[]"]');
-                            const priceField = row.querySelector('input[name="price[]"]');
-                            const subtotalField = row.querySelector('input[name="subtotal[]"]');
+    const remainingField = row.querySelector('input[name="remaining_quota[]"]');
+    const maxQuotaField  = row.querySelector('input[name="maximum_quota[]"]');
+    const usedQuotaField = row.querySelector('input[name="used_quota[]"]');
+    const priceField     = row.querySelector('input[name="price[]"]');
+    const subtotalField  = row.querySelector('input[name="subtotal[]"]');
 
-                            const remainingQuota = parseInt(remainingField.value) || 0;
-                            const maxQuota = parseInt(maxQuotaField.value) || 0;
-                            const price = parseFloat(priceField.value) || 0;
+    // Simpan nilai original sekali (jika belum ada)
+    if (!maxQuotaField.dataset.orig) {
+        maxQuotaField.dataset.orig  = String(maxQuotaField.value || 0);
+        usedQuotaField.dataset.orig = String(usedQuotaField.value || 0);
+        remainingField.dataset.orig = String(remainingField.value || 0);
+    }
 
-                            // Hitung kuota baru
-                            const newMaxQuota = maxQuota + qty;
-                            const newRemainingQuota = Math.max(newMaxQuota + remainingQuota, 0);
+    const origMax       = parseInt(maxQuotaField.dataset.orig, 10) || 0;
+    const origUsed      = parseInt(usedQuotaField.dataset.orig, 10) || 0;
+    const origRemaining = parseInt(remainingField.dataset.orig, 10) || (origMax - origUsed);
+    const price         = parseFloat(priceField.value) || 0;
 
-                            // Hitung subtotal
-                            const subtotal = qty * price;
+    // Jika input kosong (user backspace) -> reset ke original (tampilan)
+    if (qty === null) {
+        maxQuotaField.value = origMax;
+        usedQuotaField.value = origUsed;
+        remainingField.value = origRemaining;
+        subtotalField.value = ''; // kosongkan subtotal sementara
+        updateGrandTotal();
+        return;
+    }
 
-                            // Update nilai input
-                            maxQuotaField.value = newMaxQuota >= 0 ? newMaxQuota : 0;
-                            remainingField.value = newRemainingQuota;
-                            subtotalField.value = subtotal.toFixed(2); // format 2 desimal
-                            updateGrandTotal();
+    // Jika qty = 0 -> tidak ada penambahan, tampilkan original + subtotal 0
+    if (qty === 0) {
+        maxQuotaField.value = origMax;
+        usedQuotaField.value = origUsed;
+        remainingField.value = origRemaining;
+        subtotalField.value = '0';
+        updateGrandTotal();
+        return;
+    }
 
-                            console.log("Updated max:", newMaxQuota);
-                            console.log("Updated remaining:", newRemainingQuota);
-                            console.log("Subtotal:", subtotal);
-                        });
+    // Logika: menambahkan kuota
+    const newMax = origMax + qty;              // maximum_quota bertambah
+    const newRemaining = origRemaining + qty;  // remaining bertambah juga
+    const newUsed = origUsed;                  // used tetap sama
+    const subtotal = qty * price;
+
+    // Update field (set langsung, jangan akumulasikan dari nilai yang sudah diubah)
+    maxQuotaField.value = newMax;
+    remainingField.value = newRemaining;
+    usedQuotaField.value = newUsed;
+    subtotalField.value = subtotal.toFixed(2);
+
+    // Recalculate grand total
+    updateGrandTotal();
+});
 
 
                         row.querySelector('.remove-row').addEventListener('click', () => {

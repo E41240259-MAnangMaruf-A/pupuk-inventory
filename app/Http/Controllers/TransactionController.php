@@ -63,6 +63,9 @@ class TransactionController extends Controller
 
             $transactionNumber = 'TRX-' . $newNumber;
 
+            $totalPayment = $this->parseRupiah($request->total_payment);
+            $totalChange = $this->parseRupiah($request->total_change);
+
             $transaction = Transaction::create([
                 'transaction_number' => $transactionNumber,
                 'farmer_id' => $request->farmer_id,
@@ -70,8 +73,8 @@ class TransactionController extends Controller
                 'user_id' => auth()->id(),
                 'transaction_date' => now(),
                 'total_amount' => 0,
-                'total_payment' => $request->total_payment,
-                'total_change' => $request->total_change,
+                'total_payment' => $totalPayment,
+                'total_change' => $totalChange,
                 'payment_status' => 'paid',
                 'notes' => $request->notes,
             ]);
@@ -295,5 +298,16 @@ class TransactionController extends Controller
     {
         $pdf = PDF::loadView('transactions.receipt', compact('transaction'));
         return $pdf->download('struk_transaksi_' . $transaction->id . '.pdf');
+    }
+
+    private function parseRupiah($value)
+    {
+        if (is_null($value))
+            return 0;
+
+        // Hapus semua karakter selain angka
+        $cleaned = preg_replace('/[^\d]/', '', $value);
+
+        return (int) $cleaned;
     }
 }

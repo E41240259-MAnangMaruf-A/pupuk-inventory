@@ -19,8 +19,8 @@
                         </li>
                     </ul>
                     <div class="page-btn">
-                        <a href="{{ url('online-orders') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i> Back to Sales</a>
+                        <a href="{{ route('transactions.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
+                                class="me-2"></i> Kembali</a>
                     </div>
                 </div>
 
@@ -30,18 +30,6 @@
                             <div class="invoice-box table-height"
                                 style="max-width: 1600px;width:100%;padding: 0;font-size: 14px;line-height: 24px;color: #555;">
                                 <div class="row sales-details-items d-flex">
-                                    {{-- Customer Info --}}
-                                    <div class="col-lg-4 details-item">
-                                        <h6>Nama Pelanggan:</h6>
-                                        <h4 class="mb-1" id="customer-name">-</h4>
-                                    </div>
-
-                                    {{-- Company Info --}}
-                                    <div class="col-lg-4 details-item">
-                                        <h6>Petugas</h6>
-                                        <h4 class="mb-1" id="officer-name">-</h4>
-                                    </div>
-
                                     {{-- Invoice Info --}}
                                     <div class="col-md-4 details-item">
                                         <h6>Informasi Transaksi</h6>
@@ -56,6 +44,18 @@
                                                 <i class="ti ti-point-filled"></i> -
                                             </span>
                                         </p>
+                                    </div>
+
+                                    {{-- Customer Info --}}
+                                    <div class="col-lg-4 details-item">
+                                        <h6>Nama Pelanggan:</h6>
+                                        <h4 class="mb-1" id="customer-name">-</h4>
+                                    </div>
+
+                                    {{-- Company Info --}}
+                                    <div class="col-lg-4 details-item">
+                                        <h6>Petugas</h6>
+                                        <h4 class="mb-1" id="officer-name">-</h4>
                                     </div>
                                 </div>
 
