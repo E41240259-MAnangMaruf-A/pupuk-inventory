@@ -97,7 +97,7 @@
                                             <div class="total-order w-100 max-widthauto m-auto mb-4">
                                                 <ul>
                                                     <li>
-                                                        <h4>Total</h4>
+                                                        <h4>Total Subsidi</h4>
                                                         <h5 id="grandTotal">Rp. 0.00</h5>
                                                     </li>
                                                 </ul>

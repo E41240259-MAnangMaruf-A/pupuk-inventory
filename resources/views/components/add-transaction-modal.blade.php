@@ -144,7 +144,7 @@
                                         <ul class="border-1 rounded-2">
                                             <li
                                                 class="border-bottom d-flex justify-content-between align-items-center px-3 py-2">
-                                                <h4 class="border-end mb-0 pe-2">Grand</h4>
+                                                <h4 class="border-end mb-0 pe-2">Total Transaksi</h4>
                                                 <h5 id="grand-total-text" class="mb-0">Rp. 0</h5>
                                             </li>
                                             <li
@@ -245,7 +245,8 @@
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term // kata kunci pencarian
+                            q: params.term,
+                            farmer_id: $('.farmer-select').val()
                         };
                     },
                     processResults: function(data) {

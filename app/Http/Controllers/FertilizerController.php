@@ -14,8 +14,17 @@ class FertilizerController extends Controller
 {
     public function index()
     {
-        $fertilizers = FertilizerType::with('stock')->get()->map(function ($fertilizer) {
-            $fertilizer->current_stock = $fertilizer->stock->current_stock ?? 0;
+        $fertilizers = FertilizerType::with(['stock', 'subsidyAllocations'])->get()->map(function ($fertilizer) {
+            // current stock (single related model)
+            $currentStock = $fertilizer->stock->current_stock ?? 0;
+
+            // total subsidized stock (sum of remaining_quota across allocations)
+            $subsidizedStock = $fertilizer->subsidyAllocations->sum('remaining_quota') ?? 0;
+
+            // attach computed properties to the model (or return array if preferred)
+            $fertilizer->current_stock = (int) $currentStock;
+            $fertilizer->subsidized_stock = (int) $subsidizedStock;
+
             return $fertilizer;
         });
 
@@ -132,27 +141,30 @@ class FertilizerController extends Controller
                     ]
                 );
 
-                // Handle FertilizerStock
-                $stock = FertilizerStock::firstOrCreate(
-                    ['fertilizer_type_id' => $fertilizerId],
-                    ['current_stock' => 0]
-                );
+                // update status subsidi
+                FertilizerType::find($fertilizerId)->update(['is_subsidized' => true]);
 
-                $oldStock = $stock->current_stock;
-                $final = $stock->current_stock + $quantity;
-                $stock->current_stock = $final;
-                $stock->save();
+                // Handle FertilizerStock
+                // $stock = FertilizerStock::firstOrCreate(
+                //     ['fertilizer_type_id' => $fertilizerId],
+                //     ['current_stock' => 0]
+                // );
+
+                // $oldStock = $stock->current_stock;
+                // $final = $stock->current_stock + $quantity;
+                // $stock->current_stock = $final;
+                // $stock->save();
 
                 // Log stock history
-                FertilizerStockHistory::create([
-                    'fertilizer_type_id' => $fertilizerId,
-                    'current_stock' => $oldStock,
-                    'stock_change' => +$quantity,
-                    'final_stock' => $final,
-                    'type' => 'in',
-                    'note' => 'Stok ditambahkan melalui subsidi stok',
-                    'user_id' => auth()->id(),
-                ]);
+                // FertilizerStockHistory::create([
+                //     'fertilizer_type_id' => $fertilizerId,
+                //     'current_stock' => $oldStock,
+                //     'stock_change' => +$quantity,
+                //     'final_stock' => $final,
+                //     'type' => 'in',
+                //     'note' => 'Stok ditambahkan melalui subsidi stok',
+                //     'user_id' => auth()->id(),
+                // ]);
             }
         });
 
@@ -219,8 +231,8 @@ class FertilizerController extends Controller
 
     public function fertilizersAjaxSearch(Request $request)
     {
-        $query = $request->get('q', '');
-        $farmerId = $request->get('farmer_id');
+        $query = $request->get('q', default: '');
+        $selected_farmer_id = $request->get('farmer_id');
 
         // 1️⃣ Get fertilizer types
         $fertilizers = FertilizerType::where(function ($q2) use ($query) {
@@ -236,7 +248,7 @@ class FertilizerController extends Controller
                 'description',
                 'is_subsidized'
             ])
-            ->map(function ($fertilizer, $farmerId) {
+            ->map(function ($fertilizer) use ($selected_farmer_id) {
 
                 // 2️⃣ Get non-subsidized stock from fertilizer_stocks
                 $nonSubsidizedStock = FertilizerStock::where('fertilizer_type_id', $fertilizer->id)
@@ -244,8 +256,8 @@ class FertilizerController extends Controller
 
                 // if farmer selected, filter by farmer_id
                 $query = SubsidyAllocation::where('fertilizer_type_id', $fertilizer->id);
-                if (!empty($farmerId)) {
-                    $query->where('farmer_id', $farmerId);
+                if (!empty($selected_farmer_id)) {
+                    $query->where('farmer_id', $selected_farmer_id);
                 }
 
                 $subsidizedStock = $query->sum('remaining_quota') ?? 0;
@@ -253,6 +265,8 @@ class FertilizerController extends Controller
                 // 4️⃣ Return combined data
                 return [
                     'id' => $fertilizer->id,
+                    'farmer_id' => $selected_farmer_id,
+                    'fertilizer' => $fertilizer,
                     'text' => $fertilizer->text,
                     'unit' => $fertilizer->unit,
                     'subsidized_price' => $fertilizer->subsidized_price,

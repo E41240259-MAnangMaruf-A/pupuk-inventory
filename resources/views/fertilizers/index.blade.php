@@ -115,7 +115,14 @@
                                         </td>
                                         <td>{{ $fertilizer->retail_price ? 'Rp ' . number_format($fertilizer->retail_price, 2, ',', '.') : '-' }}
                                         </td>
-                                        <td>{{ $fertilizer->current_stock }}</td>
+                                        <td>
+                                            <span>Total: {{ $fertilizer->current_stock + $fertilizer->subsidized_stock }}</span>
+                                            <br>
+                                            <small class="text-muted">
+                                                <span class="text-success">Stok Subsidi: <strong>{{ $fertilizer->subsidized_stock }}</strong><br></span>
+                                                <span class="text-primary">Stok Non-Subsidi: <strong>{{ $fertilizer->current_stock }}</strong><br></span>
+                                            </small>
+                                        </td>
                                         <td>{{ $fertilizer->description ?? '-' }}</td>
                                         <td>
                                             @if ($fertilizer->is_subsidized)

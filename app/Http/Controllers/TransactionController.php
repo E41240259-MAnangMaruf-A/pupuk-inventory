@@ -110,6 +110,18 @@ class TransactionController extends Controller
                     $allocation->remaining_quota -= $quantity;
                     $allocation->save();
 
+                    if ($allocation->remaining_quota <= 0) {
+                        $allocation->remaining_quota = 0;
+                        $allocation->save();
+
+                        // Update status pupuk di FertilizerType
+                        $fertilizer = FertilizerType::find($fertilizerId);
+                        if ($fertilizer) {
+                            $fertilizer->is_subsidized = false;
+                            $fertilizer->save();
+                        }
+                    }
+
                     // Catat histori subsidi
                     SubsidyAllocationHistory::create([
                         'subsidy_allocation_id' => $allocation->id,
@@ -124,28 +136,28 @@ class TransactionController extends Controller
                     $usedFromStock = $quantity;
                     $isSubsidized = false;
                     $unitPrice = $request->retail_price[$index];
+
+                    // ==============================
+                    // 2️⃣ Kurangi stok fisik
+                    // ==============================
+                    if ($stock->current_stock < $quantity) {
+                        throw new Exception("Stok pupuk tidak mencukupi untuk transaksi ini!");
+                    }
+
+                    $current_stock = $stock->current_stock;
+                    $final_stock = $stock->current_stock -= $quantity;
+                    $stock->save();
+
+                    FertilizerStockHistory::create([
+                        'fertilizer_type_id' => $fertilizerId,
+                        'current_stock' => $current_stock,
+                        'stock_change' => -$quantity,
+                        'final_stock' => $final_stock,
+                        'type' => 'out',
+                        'note' => "Transaksi #" . $transaction->transaction_number,
+                        'user_id' => auth()->id(),
+                    ]);
                 }
-
-                // ==============================
-                // 2️⃣ Kurangi stok fisik
-                // ==============================
-                if ($stock->current_stock < $quantity) {
-                    throw new Exception("Stok pupuk tidak mencukupi untuk transaksi ini!");
-                }
-
-                $current_stock = $stock->current_stock;
-                $final_stock = $stock->current_stock -= $quantity;
-                $stock->save();
-
-                FertilizerStockHistory::create([
-                    'fertilizer_type_id' => $fertilizerId,
-                    'current_stock' => $current_stock,
-                    'stock_change' => -$quantity,
-                    'final_stock' => $final_stock,
-                    'type' => 'out',
-                    'note' => "Transaksi #" . $transaction->transaction_number,
-                    'user_id' => auth()->id(),
-                ]);
 
                 // ==============================
                 // 3️⃣ Simpan detail transaksi

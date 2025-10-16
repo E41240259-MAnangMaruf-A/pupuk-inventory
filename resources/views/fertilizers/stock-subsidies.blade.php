@@ -247,6 +247,7 @@
                             maxQuotaField.value = newMaxQuota >= 0 ? newMaxQuota : 0;
                             remainingField.value = newRemainingQuota;
                             subtotalField.value = subtotal.toFixed(2); // format 2 desimal
+                            updateGrandTotal();
 
                             console.log("Updated max:", newMaxQuota);
                             console.log("Updated remaining:", newRemainingQuota);
@@ -254,8 +255,10 @@
                         });
 
 
-                        // Event: remove row
-                        row.querySelector('.remove-row').addEventListener('click', () => row.remove());
+                        row.querySelector('.remove-row').addEventListener('click', () => {
+                            row.remove();
+                            updateGrandTotal();
+                        });
                     })
                     .catch(err => {
                         console.error("AJAX error:", err);
@@ -272,6 +275,20 @@
                     attachFertilizerSubsidiesListener();
                 }
             });
+
+            function updateGrandTotal() {
+                let total = 0;
+                document.querySelectorAll('input[name="subtotal[]"]').forEach(input => {
+                    total += parseFloat(input.value) || 0;
+                });
+
+                // Format ke Rupiah
+                const formatted = total.toLocaleString('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                });
+                document.getElementById('grandTotal').textContent = formatted;
+            }
         })();
     </script>
 
