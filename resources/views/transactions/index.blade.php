@@ -216,12 +216,9 @@
                                             </ul>
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @endforeach
                             </tbody>
 
-                            {{-- Include Modals --}}
-                            @component('components.detail-transaction-modal', ['transactions' => $transactions])
-                            @endcomponent
                         </table>
                     </div>
 
