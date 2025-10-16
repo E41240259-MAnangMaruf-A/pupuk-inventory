@@ -13,9 +13,9 @@ class SubsidyAllocation extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-    'period_start' => 'date',
-    'period_end' => 'date',
-];
+        'period_start' => 'date',
+        'period_end' => 'date',
+    ];
 
     // Relasi ke Farmer
     public function farmer()

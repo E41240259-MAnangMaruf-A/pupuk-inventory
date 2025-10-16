@@ -115,8 +115,12 @@ Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(functio
     Route::get('/ajax/farmers', [FarmerController::class, 'ajaxSearch'])
         ->name('farmers.ajax');
 
-    Route::get('/ajax/fertilizers', [FertilizerController::class, 'ajaxSearch'])
+    Route::get('/ajax/fertilizers', [FertilizerController::class, 'fertilizersAjaxSearch'])
         ->name('fertilizers.ajax');
+
+    Route::get('/ajax/allocations', [FertilizerController::class, 'allocationsAjaxSearch'])
+        ->name('allocations.ajax');
+
 
     Route::get('/transaksi/{transaction}/cetak-struk', [TransactionController::class, 'printReceipt'])
         ->name('transactions.print');
@@ -126,7 +130,7 @@ Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(functio
 Route::middleware(['auth', 'role:kepala_desa'])->prefix('kepala-desa')->name('kepala-desa.')->group(function () {
     // Dashboard Kepala Desa
     Route::get('/dashboard', [KepalaDesaController::class, 'dashboard'])->name('dashboard');
-    
+
     // Data Petani (VIEW ONLY)
     Route::prefix('petani')->name('petani.')->group(function () {
         Route::get('validated', [KepalaDesaController::class, 'petaniValidated'])->name('validated');
@@ -161,7 +165,7 @@ Route::prefix('dashboard')->name('dashboard.')->group(function () {
 Route::middleware(['auth', 'role:kepala_desa'])->prefix('kepala-desa')->name('kepala-desa.')->group(function () {
     // Dashboard Kepala Desa
     Route::get('/dashboard', [KepalaDesaDashboardController::class, 'dashboard'])->name('dashboard');
-    
+
     // Data Petani (VIEW ONLY)
     Route::prefix('petani')->name('petani.')->group(function () {
         Route::get('validated', [KepalaDesaController::class, 'petaniValidated'])->name('validated');

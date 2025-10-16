@@ -224,6 +224,8 @@
                                                     <td>{{ $history->final_stock }}</td>
                                                     <td>
                                                         {{ $history->type === 'in' ? 'Stok Masuk' : ($history->type === 'out' ? 'Stok Keluar' : '-') }}
+                                                        <span
+                                                            class="text-muted">{{ $history->note }}</span>
                                                     </td>
                                                     <td>{{ $history->created_at->format('Y-m-d H:i') }}</td>
                                                 </tr>
@@ -384,8 +386,6 @@
 
                     tableRows.forEach(row => {
                         const productName = row.querySelector('td').textContent.trim();
-                        console.log(productName);
-                        
 
                         if (type === 'all' || productName.includes(type)) {
                             row.style.display = '';

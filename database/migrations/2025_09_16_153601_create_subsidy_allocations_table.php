@@ -15,8 +15,8 @@ return new class extends Migration
             $table->unsignedInteger('maximum_quota');
             $table->unsignedInteger('used_quota')->default(0);
             $table->unsignedInteger('remaining_quota');
-            $table->date('period_start');
-            $table->date('period_end');
+            $table->date('period_start')->nullable();
+            $table->date('period_end')->nullable();
             $table->string('status', 20)->default('active');
             $table->timestamps();
         });

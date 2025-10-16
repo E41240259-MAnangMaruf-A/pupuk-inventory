@@ -70,13 +70,13 @@
                                 <table class="table datanew" id="transaction-table">
                                     <thead>
                                         <tr>
-                                            <th>Produk</th>
+                                            <th>Nama Pupuk</th>
                                             <th>Jumlah</th>
-                                            <th>Harga Subsidi(Rp.)</th>
-                                            <th>Harga Jual(Rp.)</th>
                                             <th>Satuan</th>
-                                            <th>Deskripsi/Subsidi</th>
-                                            <th>Subtotal(Rp.)</th>
+                                            <th>Stok Subsidi</th>
+                                            <th>Stok Non-Subsidi</th>
+                                            <th>Keterangan</th>
+                                            <th>Subtotal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -91,10 +91,12 @@
                                                     <td><input type="number" class="form-control quantity"
                                                             name="quantity[]" value="{{ old('quantity')[$i] ?? 1 }}"
                                                             min="1"></td>
+                                                    <td>{{ old('unit')[$i] ?? '' }}</td>
                                                     <td><input type="number" class="form-control subsidized_price"
                                                             name="subsidized_price[]"
                                                             value="{{ old('subsidized_price')[$i] ?? 0 }}" readonly>
                                                     </td>
+                                                    <td>{{ old('unit')[$i] ?? '' }}</td>
                                                     <td><input type="number" class="form-control retail_price"
                                                             name="retail_price[]"
                                                             value="{{ old('retail_price')[$i] ?? 0 }}" readonly></td>
@@ -276,6 +278,8 @@
             $('.fertilizer-select').on('select2:select', function(e) {
                 let data = e.params.data;
                 let tableBody = $('.datanew tbody');
+                console.log(data);
+
 
                 tableBody.find('tr:contains("Belum ada produk")').remove();
 
@@ -293,19 +297,34 @@
                     let purchasePrice = data.is_subsidized ? data.subsidized_price : data.retail_price;
 
                     let newRow = `
-        <tr>
-            <td>
-                ${data.text} 
-                <input type="hidden" name="fertilizer_id[]" value="${data.id}">
-            </td>
-            <td><input type="number" class="form-control quantity" name="quantity[]" value="1" min="1"></td>
-            <td><input type="number" class="form-control subsidized_price" name="subsidized_price[]" value="${purchasePrice || 0}" readonly></td>
-            <td><input type="number" class="form-control retail_price" name="retail_price[]" value="${data.retail_price || 0}" readonly></td>
-            <td>${data.unit || ''}</td>
-            <td>${data.description || ''} ${data.is_subsidized ? '(Subsidi)' : ''}</td>
-            <td><input type="number" class="form-control subtotal" name="subtotal[]" value="${purchasePrice || 0}" readonly></td>
-        </tr>
-        `;
+                    <tr>
+                        <td>
+                            ${data.text} 
+                            <input type="hidden" name="fertilizer_id[]" value="${data.id}">
+                            <input type="hidden" class="subsidized_price" name="subsidized_price[]" value="${data.subsidized_price || 0}">
+                            <input type="hidden" class="retail_price" name="retail_price[]" value="${data.retail_price || 0}">
+                        </td>
+                        <td>
+                            <input type="number" class="form-control quantity" name="quantity[]" value="1" min="1">
+                        </td>
+                        <td>${data.unit || ''}</td>
+                        <td>${data.stock_subsidized ?? 0}</td>
+                        <td>${data.stock_non_subsidized ?? 0}</td>
+                        <td>
+                            ${data.description || ''} ${data.is_subsidized ? '(Subsidi)' : '(Non-Subsidi)'}
+                            <br>
+                            <small class="text-muted">
+                                Harga Subsidi: <strong>Rp ${(data.subsidized_price || 0).toLocaleString('id-ID')}</strong><br>
+                                Harga Non-Subsidi: <strong>Rp ${(data.retail_price || 0).toLocaleString('id-ID')}</strong>
+                            </small>
+                        </td>
+                        <td>
+                            <input type="number" class="form-control subtotal" name="subtotal[]" 
+                                value="${data.is_subsidized ? data.subsidized_price || 0 : data.retail_price || 0}" readonly>
+                        </td>
+                    </tr>
+                    `;
+
                     tableBody.append(newRow);
                 }
 
@@ -317,6 +336,10 @@
                 let row = $(this).closest('tr');
                 let quantity = parseFloat($(this).val()) || 0;
                 let price = parseFloat(row.find('input.subsidized_price').val()) || 0;
+                console.log(quantity);
+                console.log(price);
+                console.log(quantity * price);
+                
                 row.find('.subtotal').val(quantity * price);
 
                 updateGrandTotal();
@@ -335,7 +358,8 @@
                     delay: 250,
                     data: function(params) {
                         return {
-                            q: params.term // search term
+                            q: params.term,
+                            farmer_id: $('#farmer-select').val()
                         };
                     },
                     processResults: function(data) {

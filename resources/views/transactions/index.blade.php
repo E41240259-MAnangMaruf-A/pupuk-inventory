@@ -6,8 +6,8 @@
             <div class="page-header">
                 <div class="add-item d-flex">
                     <div class="page-title">
-                        <h4>POS Orders</h4>
-                        <h6>Manage Your pos orders</h6>
+                        <h4>Transaksi Penjualan Pupuk</h4>
+                        <h6>Kelola Penjualan Pupuk Subsidi dan Non-Subsidi</h6>
                     </div>
                 </div>
                 <ul class="table-top-head">
@@ -134,7 +134,7 @@
                                             <span class="checkmarks"></span>
                                         </label>
                                     </th>
-                                    <th>Petani</th>
+                                    <th>Nama Petani</th>
                                     <th>Nomor Transaksi</th>
                                     <th>Tanggal</th>
                                     <th>Total</th>
@@ -218,6 +218,10 @@
                                     </tr>
                                 @endforeach
                             </tbody>
+
+                            {{-- Include Modals --}}
+                            @component('components.detail-transaction-modal', ['transactions' => $transactions])
+                            @endcomponent
                         </table>
                     </div>
 

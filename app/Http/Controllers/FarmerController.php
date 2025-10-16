@@ -71,7 +71,7 @@ class FarmerController extends Controller
         foreach ($farmers as $farmer) {
             $results[] = [
                 'id' => $farmer->id,
-                'text' => "{$farmer->farmer_name}"
+                'text' => $farmer->farmer_name . ' (' . $farmer->nik . ')'
             ];
         }
 

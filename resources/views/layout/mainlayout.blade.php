@@ -301,11 +301,22 @@
 <!-- /Main Wrapper -->
 
 @if (Route::is(['fertilizers.stock']))
-    @component('components.stock-management-modal', ['fertilizers' => $fertilizers])
+    @component('components.add-stock-modal', ['fertilizers' => $fertilizers])
+    @endcomponent
+@endif
+
+@if (Route::is(['fertilizers.stock-subsidies']))
+    @component('components.add-stock-subsidy-modal', [
+        'farmers' => $farmers,
+        'fertilizers' => $fertilizers,
+        'allocations' => $allocations,
+    ])
     @endcomponent
 @endif
 
 @if (Route::is(['transactions.index']))
+    @component('components.detail-transaction-modal.blade', ['transactions' => $transactions, 'customers' => $customers])
+    @endcomponent
     @component('components.add-transaction-modal', ['transactions' => $transactions, 'customers' => $customers])
     @endcomponent
 @endif
@@ -315,6 +326,10 @@
 
 @include('layout.partials.footer-scripts')
 @yield('scripts')
+
+<script>
+    // console.log(document.getElementById('add-stock-subsidy'));
+</script>
 
 </body>
 

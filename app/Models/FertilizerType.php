@@ -25,4 +25,8 @@ class FertilizerType extends Model
         return $this->hasOne(FertilizerStock::class, 'fertilizer_type_id');
     }
 
+    public function allocations()
+    {
+        return $this->hasMany(SubsidyAllocation::class, 'fertilizer_type_id');
+    }
 }
