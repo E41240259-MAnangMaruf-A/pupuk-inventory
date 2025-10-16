@@ -97,9 +97,11 @@ Route::middleware(['auth', 'role:admin_koperasi,kasir_koperasi'])->group(functio
     Route::get('/ajax/allocations', [FertilizerController::class, 'allocationsAjaxSearch'])
         ->name('allocations.ajax');
 
-
     Route::get('/transaksi/{transaction}/cetak-struk', [TransactionController::class, 'printReceipt'])
         ->name('transactions.print');
+
+    Route::get('/ajax/transactions', [TransactionController::class, 'transactionsAjaxDetail'])
+        ->name('transactions.ajax');
 });
 
 // ========== ROUTE BARU UNTUK KEPALA DESA ==========

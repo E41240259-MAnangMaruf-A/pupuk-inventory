@@ -315,8 +315,8 @@
 @endif
 
 @if (Route::is(['transactions.index']))
-    {{-- @component('components.detail-transaction-modal', ['transactions' => $transactions, 'customers' => $customers])
-    @endcomponent --}}
+    @component('components.detail-transaction-modal', ['transactions' => $transactions, 'customers' => $customers])
+    @endcomponent
     @component('components.add-transaction-modal', ['transactions' => $transactions, 'customers' => $customers])
     @endcomponent
 @endif
@@ -325,7 +325,7 @@
 @endcomponent
 
 @include('layout.partials.footer-scripts')
-@yield('scripts')
+@stack('scripts')
 
 <script>
     // console.log(document.getElementById('add-stock-subsidy'));

@@ -174,7 +174,7 @@
     </div>
 @endif
 
-@section('scripts')
+@push('scripts')
     @if ($errors->any())
         <script>
             document.addEventListener("DOMContentLoaded", function() {
@@ -185,55 +185,54 @@
     @endif
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const totalEl = document.getElementById('grand-total-text');
-            const totalPaymentEl = document.getElementById('total-payment');
-            const totalChangeEl = document.getElementById('total-change');
-            const totalPaymentTextEl = document.getElementById('total-payment-text');
-            const totalChangeTextEl = document.getElementById('total-change-text');
+        const totalEl = document.getElementById('grand-total-text');
+        const totalPaymentEl = document.getElementById('total-payment');
+        const totalChangeEl = document.getElementById('total-change');
+        const totalPaymentTextEl = document.getElementById('total-payment-text');
+        const totalChangeTextEl = document.getElementById('total-change-text');
 
-            // 🔹 Parse text seperti "Rp. 1.800,00" → 1800
-            function parseRupiah(text) {
-                if (!text) return 0;
+        // 🔹 Parse text seperti "Rp. 1.800,00" → 1800
+        function parseRupiah(text) {
+            if (!text) return 0;
 
-                // Hapus semua karakter selain angka dan koma
-                let cleaned = text.replace(/[^\d,]/g, '');
+            // Hapus semua karakter selain angka dan koma
+            let cleaned = text.replace(/[^\d,]/g, '');
 
-                // Hapus koma dan desimal (misalnya ,00)
-                cleaned = cleaned.split(',')[0];
+            // Hapus koma dan desimal (misalnya ,00)
+            cleaned = cleaned.split(',')[0];
 
-                // Hapus titik ribuan kalau ada
-                cleaned = cleaned.replace(/\./g, '');
+            // Hapus titik ribuan kalau ada
+            cleaned = cleaned.replace(/\./g, '');
 
-                return parseInt(cleaned) || 0;
-            }
+            return parseInt(cleaned) || 0;
+        }
 
 
-            // 🔹 Format angka jadi Rp x.xxx
-            function formatRupiah(num) {
-                return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
-            }
+        // 🔹 Format angka jadi Rp x.xxx
+        function formatRupiah(num) {
+            return 'Rp ' + new Intl.NumberFormat('id-ID').format(num);
+        }
+
+        function handlePaymentAndChange() {
+            const total = parseRupiah(totalEl.textContent);
+            const bayar = parseRupiah(totalPaymentEl.value);
+            const kembali = bayar - total;
+
+            totalChangeEl.value = kembali > 0 ? formatRupiah(kembali) : 'Rp 0';
+            totalPaymentTextEl.textContent = formatRupiah(bayar);
+            totalChangeTextEl.textContent = kembali > 0 ? formatRupiah(kembali) : 'Rp 0';
+        }
+
+        $(document).ready(function() {
+            $('#transaction-date').val(moment().format('YYYY-MM-DD'));
 
             totalPaymentEl.addEventListener('input', function() {
                 // Bersihkan input biar tetap bisa format ribuan saat ketik
                 let raw = this.value.replace(/[^\d]/g, '');
                 this.value = raw ? new Intl.NumberFormat('id-ID').format(parseInt(raw)) : '';
 
-                const total = parseRupiah(totalEl.textContent);
-                const bayar = parseInt(raw) || 0;
-                const kembali = bayar - total;
-
-                totalChangeEl.value = kembali > 0 ? formatRupiah(kembali) : 'Rp 0';
-
-                totalPaymentTextEl.textContent = formatRupiah(bayar);
-                totalChangeTextEl.textContent = kembali > 0 ? formatRupiah(kembali) : 'Rp. 0';
+                handlePaymentAndChange();
             });
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            $('#transaction-date').val(moment().format('YYYY-MM-DD'));
 
             $('.fertilizer-select').select2({
                 dropdownParent: $('#add-sales-new'),
@@ -263,6 +262,8 @@
                 let grandTotal = 0;
                 $('.subtotal').each(function() {
                     let val = parseFloat($(this).val()) || 0;
+                    console.log(val);
+
                     grandTotal += val;
                 });
 
@@ -278,9 +279,7 @@
             // setelah row ditambahkan
             $('.fertilizer-select').on('select2:select', function(e) {
                 let data = e.params.data;
-                let tableBody = $('.datanew tbody');
-                console.log(data);
-
+                let tableBody = $('#transaction-table tbody');
 
                 tableBody.find('tr:contains("Belum ada produk")').remove();
 
@@ -315,8 +314,13 @@
                             ${data.description || ''} ${data.is_subsidized ? '(Subsidi)' : '(Non-Subsidi)'}
                             <br>
                             <small class="text-muted">
-                                Harga Subsidi: <strong>Rp ${(data.subsidized_price || 0).toLocaleString('id-ID')}</strong><br>
-                                Harga Non-Subsidi: <strong>Rp ${(data.retail_price || 0).toLocaleString('id-ID')}</strong>
+                                <strong class="${(data.stock_subsidized ?? 0) > 0 ? 'text-success' : 'text-muted'}">
+                                    Rp ${(data.subsidized_price || 0).toLocaleString('id-ID')}
+                                </strong><br>
+                                Harga Non-Subsidi: 
+                                <strong class="${(data.stock_subsidized ?? 0) === 0 ? 'text-success' : 'text-muted'}">
+                                    Rp ${(data.retail_price || 0).toLocaleString('id-ID')}
+                                </strong>
                             </small>
                         </td>
                         <td>
@@ -337,13 +341,11 @@
                 let row = $(this).closest('tr');
                 let quantity = parseFloat($(this).val()) || 0;
                 let price = parseFloat(row.find('input.subsidized_price').val()) || 0;
-                console.log(quantity);
-                console.log(price);
-                console.log(quantity * price);
-                
+
                 row.find('.subtotal').val(quantity * price);
 
                 updateGrandTotal();
+                handlePaymentAndChange();
             });
 
             const select = $('.farmer-select');
@@ -374,4 +376,4 @@
             });
         });
     </script>
-@endsection
+@endpush

@@ -56,8 +56,8 @@
                                                 <tr>
                                                     <th>Nama Pupuk</th>
                                                     <th>Harga (Rp)</th>
-                                                    <th>Stok Saat Ini</th>
                                                     <th>Stok Baru</th>
+                                                    <th>Stok Saat Ini</th>
                                                     <th>Stok Akhir</th>
                                                     <th>Subtotal (Rp)</th>
                                                 </tr>

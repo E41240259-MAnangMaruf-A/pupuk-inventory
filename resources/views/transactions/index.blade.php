@@ -183,9 +183,8 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li>
-                                                    <a href="javascript:void(0);" class="dropdown-item"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#sales-details-{{ $transaction->id }}"><i
+                                                    <a href="javascript:void(0);" class="dropdown-item btn-show-detail"
+                                                        data-id="{{ $transaction->id }}" data-bs-toggle="modal"><i
                                                             data-feather="eye" class="info-img"></i>Detail</a>
                                                 </li>
                                                 {{-- <li>
@@ -216,7 +215,7 @@
                                             </ul>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                @endforeach
                             </tbody>
 
                         </table>
@@ -232,3 +231,90 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailButtons = document.querySelectorAll('.btn-show-detail');
+            const modal = new bootstrap.Modal(document.getElementById('sales-details-modal'));
+
+            detailButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    let transactionId = $(this).data('id'); // ambil id transaksi
+                    modal.show();
+
+                    $.ajax({
+                        url: "{{ route('transactions.ajax') }}",
+                        type: 'GET',
+                        data: {
+                            transaction_id: transactionId
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            let transactionNumber = response.transaction_number;
+                            let transactionDate = response.transaction_date;
+                            let farmerName = response.farmer_name;
+                            let officerName = response.officer_name;
+                            let paymentStatus = response.payment_status;
+                            let totalAmount = parseFloat(response.total_amount || 0);
+                            let totalPayment = parseFloat(response.total_payment || 0);
+                            let totalChange = parseFloat(response.total_change || 0);
+
+                            // Array of details
+                            let details = response.details || [];
+
+                            // === Isi ke elemen HTML ===
+                            $('#customer-name').text(farmerName);
+                            $('#officer-name').text(officerName);
+                            $('#transaction-number').text(transactionNumber);
+                            $('#transaction-date').text(transactionDate);
+                            $('#total-amount-label').text(
+                                `Rp ${Number(totalAmount).toLocaleString('id-ID')}`);
+                            $('#total-payment-label').text(
+                                `Rp ${Number(totalPayment).toLocaleString('id-ID')}`
+                            );
+                            $('#total-change-label').text(
+                                `Rp ${Number(totalChange).toLocaleString('id-ID')}`);
+
+                            let statusBadge = '';
+                            let status = (paymentStatus || '').toLowerCase();
+
+                            if (status === 'paid') {
+                                statusBadge =
+                                    `<span class="badge badge-soft-success shadow-none badge-xs">Dibayar</span>`;
+                            } else if (status === 'unpaid') {
+                                statusBadge =
+                                    `<span class="badge badge-cyan shadow-none badge-xs">Belum Dibayar</span>`;
+                            } else {
+                                statusBadge =
+                                    `<span class="badge badge-soft-danger shadow-none badge-xs">Tidak Diketahui</span>`;
+                            }
+                            $('#payment-status').html(statusBadge);
+
+                            const tbody = $('#order-summary-body');
+                            tbody.empty(); // Kosongkan tabel sebelum isi ulang
+
+                            // === Isi tabel detail produk ===
+                            details.forEach(item => {
+                                tbody.append(`
+        <tr>
+            <td>${item.fertilizer_name}</td>
+            <td>${item.unit}</td>
+            <td>${item.quantity}</td>
+            <td>Rp ${Number(item.unit_price).toLocaleString('id-ID')}</td>
+            <td>Rp ${Number(item.subtotal).toLocaleString('id-ID')}</td>
+            <td>${item.is_subsidized}</td>
+        </tr>
+    `);
+                            });
+
+                        },
+                        error: function(xhr) {
+                            console.error(xhr);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@endpush

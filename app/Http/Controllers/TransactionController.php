@@ -70,6 +70,8 @@ class TransactionController extends Controller
                 'user_id' => auth()->id(),
                 'transaction_date' => now(),
                 'total_amount' => 0,
+                'total_payment' => $request->total_payment,
+                'total_change' => $request->total_change,
                 'payment_status' => 'paid',
                 'notes' => $request->notes,
             ]);
@@ -229,6 +231,63 @@ class TransactionController extends Controller
         $transaction->delete();
         return redirect()->route('transactions.index')
             ->with('success', 'Transaksi berhasil dihapus');
+    }
+
+    public function transactionsAjaxDetail(Request $request)
+    {
+        $transactionId = $request->get('transaction_id');
+
+        // Ambil data transaksi utama
+        $transaction = \App\Models\Transaction::query()
+            ->select([
+                'transactions.*',
+                'farmers.farmer_name',
+                'users.name as officer_name',
+            ])
+            ->leftJoin('farmers', 'transactions.farmer_id', '=', 'farmers.id')
+            ->leftJoin('users', 'transactions.user_id', '=', 'users.id')
+            ->where('transactions.id', $transactionId)
+            ->first();
+
+        if (!$transaction) {
+            return response()->json(['message' => 'Transaksi tidak ditemukan.'], 404);
+        }
+
+        // Ambil detail transaksi
+        $details = \App\Models\TransactionDetail::query()
+            ->select([
+                'transaction_details.*',
+                'fertilizer_types.fertilizer_name',
+                'fertilizer_types.unit',
+            ])
+            ->leftJoin('fertilizer_types', 'transaction_details.fertilizer_type_id', '=', 'fertilizer_types.id')
+            ->where('transaction_details.transaction_id', $transactionId)
+            ->get();
+
+        // Format data detail
+        $detailList = $details->map(function ($item) {
+            return [
+                'fertilizer_name' => $item->fertilizer_name,
+                'unit' => $item->unit,
+                'quantity' => $item->quantity,
+                'unit_price' => (float) $item->unit_price,
+                'is_subsidized' => $item->is_subsidized ? 'Ya' : 'Tidak',
+                'subtotal' => (float) $item->subtotal,
+            ];
+        });
+
+        // Format response JSON
+        return response()->json([
+            'transaction_number' => $transaction->transaction_number,
+            'farmer_name' => $transaction->farmer_name,
+            'officer_name' => $transaction->officer_name,
+            'transaction_date' => $transaction->transaction_date->format('Y-m-d'),
+            'total_amount' => (float) $transaction->total_amount,
+            'total_payment' => (float) $transaction->total_payment,
+            'total_change' => (float) $transaction->total_change,
+            'payment_status' => ucfirst($transaction->payment_status),
+            'details' => $detailList,
+        ]);
     }
 
     // Cetak struk transaksi

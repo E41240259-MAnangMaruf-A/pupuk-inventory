@@ -120,7 +120,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
         (function() {
             function attachFertilizerSubsidiesListener() {
@@ -335,4 +335,4 @@
             });
         });
     </script>
-@endsection
+@endpush

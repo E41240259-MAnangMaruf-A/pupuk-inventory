@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
 
-                                <div
+                                {{-- <div
                                     class="d-flex table-dropdown my-xl-auto right-content align-items-center flex-wrap row-gap-3">
                                     <div class="dropdown me-2">
                                         <a href="javascript:void(0);"
@@ -78,7 +78,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
@@ -224,8 +224,7 @@
                                                     <td>{{ $history->final_stock }}</td>
                                                     <td>
                                                         {{ $history->type === 'in' ? 'Stok Masuk' : ($history->type === 'out' ? 'Stok Keluar' : '-') }}
-                                                        <span
-                                                            class="text-muted">{{ $history->note }}</span>
+                                                        <span class="text-muted">{{ $history->note }}</span>
                                                     </td>
                                                     <td>{{ $history->created_at->format('Y-m-d H:i') }}</td>
                                                 </tr>
@@ -249,7 +248,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script>
         (function() {
             function attachFertilizerListener() {
@@ -289,6 +288,11 @@
 
                 let tableBody = document.querySelector('#productTable tbody');
 
+                let existing = tableBody.querySelector(`input[name="fertilizers[]"][value="${fertId}"]`);
+                if (existing) {
+                    return;
+                }
+
                 let row = document.createElement('tr');
                 row.innerHTML = `
             <td>
@@ -296,26 +300,29 @@
                 <input type="hidden" name="fertilizers[]" value="${fertId}">
             </td>
             <td>
-                <input type="number" name="price[]" class="form-control price" value="${fertPrice}" readonly>
-            </td>
-            <td>
-                <input type="number" class="form-control current-stock" value="${currentStock}" readonly>
+                <input type="number" name="price[]" class="form-control bg-light price" value="${fertPrice}" readonly>
             </td>
             <td>
                 <input type="number" name="added_stock[]" class="form-control added-stock" value="0" min="1">
             </td>
             <td>
-                <input type="number" name="final_stock[]" class="form-control final-stock" value="${currentStock}" readonly>
+                <input type="number" class="form-control bg-light current-stock" value="${currentStock}" readonly>
             </td>
             <td>
-                <input type="number" name="subtotal[]" class="form-control subtotal" value="0" readonly>
+                <input type="number" name="final_stock[]" class="form-control bg-light final-stock" value="${currentStock}" readonly>
+            </td>
+            <td>
+                <input type="number" name="subtotal[]" class="form-control bg-light subtotal" value="0" readonly>
             </td>
         `;
 
                 // Watch "added stock" input to update final stock & subtotal
                 let addedStockInput = row.querySelector('.added-stock');
                 addedStockInput.addEventListener('input', function() {
+                    this.value = this.value.replace(/^0+(?=\d)/, ''); // hapus nol di depan
                     let added = parseInt(this.value) || 0;
+                    this.value = added; // pastikan tampil tanpa .00
+
                     let finalStockInput = row.querySelector('.final-stock');
                     let subtotalInput = row.querySelector('.subtotal');
 
@@ -397,4 +404,4 @@
             });
         });
     </script>
-@endsection
+@endpush
