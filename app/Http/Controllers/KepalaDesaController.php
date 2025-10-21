@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Farmer;
 use App\Models\FarmerSubmission;
+
 use Illuminate\Http\Request;
 
 class KepalaDesaController extends Controller
@@ -93,4 +94,6 @@ class KepalaDesaController extends Controller
         $submission = FarmerSubmission::findOrFail($id);
         return view('kepala-desa.petani.show-submission', compact('submission'));
     }
+
+    
 }

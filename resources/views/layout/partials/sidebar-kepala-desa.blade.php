@@ -1,13 +1,13 @@
 <div class="sidebar" id="sidebar">
     <!-- logo -->
     <div class="sidebar-logo active">
-        <a href="{{ route('kepala-desa.dashboard') }}" class="logo logo-normal">
+        <a href="{{ route('dashboard.kepala-desa') }}" class="logo logo-normal">
             <img src="{{ URL::asset('build/img/logo.svg') }}" alt="img">
         </a>
-        <a href="{{ route('kepala-desa.dashboard') }}" class="logo logo-white">
+        <a href="{{ route('dashboard.kepala-desa') }}" class="logo logo-white">
             <img src="{{ URL::asset('build/img/logo-white.svg') }}" alt="img">
         </a>
-        <a href="{{ route('kepala-desa.dashboard') }}" class="logo-small">
+        <a href="{{ route('dashboard.kepala-desa') }}" class="logo-small">
             <img src="{{ URL::asset('build/img/logo-small.png') }}" alt="img">
         </a>
         <a id="toggle_btn" href="javascript:void(0);">
@@ -29,49 +29,55 @@
     <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
             <ul>
-                <li class="{{ Request::routeIs('kepala-desa.dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('kepala-desa.dashboard') }}">
+                <li class="{{ Request::routeIs('dashboard.kepala-desa') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.kepala-desa') }}">
                         <i class="ti ti-layout-grid fs-16 me-2"></i><span>Dashboard</span>
                     </a>
                 </li>
                 
                 <!-- Menu Data Petani dengan Submenu -->
-                <li class="submenu {{ Request::routeIs('kepala-desa.petani.*') ? 'active' : '' }}">
+                <li class="submenu {{ Request::routeIs('kepala-desa.petani.*') ? 'active subdrop' : '' }}">
                     <a href="javascript:void(0);">
                         <i class="ti ti-users-group fs-16 me-2"></i><span>Data Petani</span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <ul>
+                    <ul style="{{ Request::routeIs('kepala-desa.petani.*') ? 'display: block;' : '' }}">
                         <li class="{{ Request::routeIs('kepala-desa.petani.validated') ? 'active' : '' }}">
-                            <a href="{{ route('kepala-desa.petani.validated') }}">Petani Tervalidasi</a>
+                            <a href="{{ route('kepala-desa.petani.validated') }}">
+                                <i class="ti ti-check fs-14 me-2"></i>Petani Tervalidasi
+                            </a>
                         </li>
                         <li class="{{ Request::routeIs('kepala-desa.petani.pending') ? 'active' : '' }}">
-                            <a href="{{ route('kepala-desa.petani.pending') }}">Menunggu Validasi</a>
+                            <a href="{{ route('kepala-desa.petani.pending') }}">
+                                <i class="ti ti-clock fs-14 me-2"></i>Menunggu Validasi
+                            </a>
                         </li>
                         <li class="{{ Request::routeIs('kepala-desa.petani.rejected') ? 'active' : '' }}">
-                            <a href="{{ route('kepala-desa.petani.rejected') }}">Pengajuan Ditolak</a>
+                            <a href="{{ route('kepala-desa.petani.rejected') }}">
+                                <i class="ti ti-x fs-14 me-2"></i>Pengajuan Ditolak
+                            </a>
                         </li>
                     </ul>
                 </li>
 
                 <!-- Menu Laporan dengan Submenu -->
-                <li class="submenu {{ Request::routeIs('kepala-desa.reports.*') ? 'active' : '' }}">
+                <li class="submenu {{ Request::routeIs('kepala-desa.reports.*') ? 'active subdrop' : '' }}">
                     <a href="javascript:void(0);">
                         <i class="ti ti-file-analytics fs-16 me-2"></i><span>Laporan</span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <ul>
-                        <li class="{{ Request::routeIs('kepala-desa.reports.fertilizer-movement') ? 'active' : '' }}">
+                    <ul style="{{ Request::routeIs('kepala-desa.reports.*') ? 'display: block;' : '' }}">
+                        <li class="{{ Request::routeIs('kepala-desa.reports.fertilizer-movement*') ? 'active' : '' }}">
                             <a href="{{ route('kepala-desa.reports.fertilizer-movement') }}">
                                 <i class="ti ti-arrow-left-right fs-14 me-2"></i>Pergerakan Pupuk
                             </a>
                         </li>
-                        <li class="{{ Request::routeIs('kepala-desa.reports.subsidy-allocation') ? 'active' : '' }}">
+                        <li class="{{ Request::routeIs('kepala-desa.reports.subsidy-allocation*') ? 'active' : '' }}">
                             <a href="{{ route('kepala-desa.reports.subsidy-allocation') }}">
                                 <i class="ti ti-discount fs-14 me-2"></i>Alokasi Subsidi
                             </a>
                         </li>
-                        <li class="{{ Request::routeIs('kepala-desa.reports.financial') ? 'active' : '' }}">
+                        <li class="{{ Request::routeIs('kepala-desa.reports.financial*') ? 'active' : '' }}">
                             <a href="{{ route('kepala-desa.reports.financial') }}">
                                 <i class="ti ti-chart-bar fs-14 me-2"></i>Laporan Keuangan
                             </a>
@@ -88,3 +94,20 @@
         </div>
     </div>
 </div>
+
+<style>
+.sidebar .submenu.active > a {
+    color: #ff9933;
+}
+
+.sidebar .submenu ul li.active a {
+    color: #ff9933;
+    background-color: rgba(255, 153, 51, 0.1);
+    border-left: 3px solid #ff9933;
+    padding-left: 17px;
+}
+
+.sidebar .submenu.subdrop > ul {
+    display: block;
+}
+</style>
